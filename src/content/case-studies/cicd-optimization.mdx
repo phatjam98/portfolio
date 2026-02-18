@@ -17,7 +17,7 @@ import BuildTimeChart from '../../components/charts/BuildTimeChart.astro';
 
 Our team was shipping features across a multi-module Gradle monorepo with over 30 microservices. The CI/CD pipeline had grown organically over two years and was averaging 45 minutes per build. Developers were batching changes to avoid the feedback loop, which led to larger, riskier deployments and more merge conflicts. The slow pipeline was the single biggest drag on team velocity.
 
-Profiling the pipeline revealed several compounding issues: every build compiled all modules regardless of what changed, test suites ran sequentially, Docker layer caching was non-existent, and dependency resolution hit remote repositories on every run. The infrastructure itself was also undersized, with builds queuing behind each other during peak hours.
+Profiling the pipeline revealed several compounding issues: every build compiled all modules regardless of what changed, test suites ran sequentially, Docker layer caching was nonexistent, and dependency resolution hit remote repositories on every run. The infrastructure itself was undersized, with builds queuing behind each other during peak hours.
 
 ## The Approach
 
@@ -46,4 +46,4 @@ Third, I right-sized the CI infrastructure by moving to larger runner instances 
 
 <BuildTimeChart beforeMinutes={45} afterMinutes={9} beforeLabel="Before" afterLabel="After" />
 
-The average pipeline time dropped from 45 minutes to under 10 minutes, a 78% reduction. Developers began pushing smaller, more frequent changes, and deployment frequency increased by 3x within the first month. The remote build cache alone saved over 200 hours of cumulative compute time per month, significantly reducing our CI costs alongside the time savings.
+The average pipeline time dropped from 45 minutes to under 10 minutes — a 78% reduction. Developers began pushing smaller, more frequent changes, and deployment frequency increased by 3x within the first month. The remote build cache alone saved over 200 hours of cumulative compute time per month, significantly reducing CI costs alongside the time savings.

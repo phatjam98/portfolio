@@ -36,8 +36,8 @@ graph TB
     style I fill:#f59e0b,color:#fff
 ```
 
-The key innovation is a shared context layer that maintains project knowledge, including dependency graphs, coding conventions, recent changes, and known patterns, and makes it available to each agent without requiring redundant exploration. Agents communicate through structured messages, and the orchestrator manages dependencies between stages, handling retries and escalation to human review when confidence is low.
+The key innovation is a shared context layer that maintains project knowledge — dependency graphs, coding conventions, recent changes, and known patterns — and makes it available to each agent without redundant exploration. Agents communicate through structured messages, and the orchestrator manages dependencies between stages, handling retries and escalating to human review when confidence is low.
 
 ## Results
 
-AgentFlow is currently in active development and early experimentation. Initial prototypes demonstrate that multi-agent orchestration can reduce the manual effort for routine development tasks like adding CRUD endpoints, writing integration tests, and updating documentation. The shared context layer significantly reduces the redundant codebase exploration that single-agent approaches require. The project serves as a proving ground for ideas about how AI-augmented development workflows might evolve beyond simple code completion.
+AgentFlow is in active development and early experimentation. Initial prototypes demonstrate that multi-agent orchestration can meaningfully reduce the manual effort involved in routine development tasks like adding CRUD endpoints, writing integration tests, and updating documentation. The shared context layer significantly cuts down on the redundant codebase exploration that single-agent approaches require. The project serves as a proving ground for how AI-augmented development workflows might evolve beyond simple code completion.

@@ -136,6 +136,7 @@ html.light {
     background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
     -webkit-background-clip: text;
     background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
   }
 
