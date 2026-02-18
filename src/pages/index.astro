@@ -1,0 +1,144 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import CaseStudyCard from '../components/CaseStudyCard.astro';
+import { getCollection } from 'astro:content';
+
+const caseStudies = (await getCollection('case-studies'))
+  .filter((entry) => entry.data.status === 'published')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<PageLayout title="Travis Carter | Senior Software Engineer & Architect">
+  <!-- Hero Section -->
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="max-w-3xl">
+      <p class="text-sm font-medium tracking-widest uppercase text-[var(--color-accent)] mb-4">
+        Senior Software Engineer &amp; Architect
+      </p>
+      <h1 class="text-gradient mb-6">
+        Building systems that scale.
+      </h1>
+      <p data-animate="fade" class="text-lg sm:text-xl text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mb-8">
+        I design and build distributed systems, event-driven architectures, and developer platforms.
+        Focused on making complex systems reliable, observable, and fast.
+      </p>
+      <div data-animate="fade" class="flex flex-wrap gap-4">
+        <a
+          href="/case-studies"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--color-accent)]
+                 text-[var(--color-bg)] font-semibold text-sm hover:bg-[var(--color-accent-dim)]
+                 transition-colors duration-200"
+        >
+          View Case Studies
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+        <a
+          href="/about"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-[var(--color-border)]
+                 text-[var(--color-text-secondary)] font-semibold text-sm
+                 hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-muted)]
+                 transition-colors duration-200"
+        >
+          About Me
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Studies Section -->
+  {caseStudies.length > 0 && (
+    <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <div class="flex items-center justify-between mb-10">
+        <h2>Featured Work</h2>
+        <a
+          href="/case-studies"
+          class="text-sm text-[var(--color-accent)] hover:text-[var(--color-accent-dim)] transition-colors duration-200"
+        >
+          View all &rarr;
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {caseStudies.map((study, i) => (
+          <div data-animate="slide-up" data-animate-delay={String(Math.min(i + 1, 4))}>
+            <CaseStudyCard
+              slug={study.id}
+              title={study.data.title}
+              subtitle={study.data.subtitle}
+              description={study.data.description}
+              category={study.data.category}
+              tags={study.data.tags}
+              heroMetric={study.data.heroMetric}
+              heroMetricLabel={study.data.heroMetricLabel}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Capabilities Section -->
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <h2 class="mb-10">What I work on</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-xl p-6 card-hover">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--color-cat-optimization) 15%, transparent);">
+          <svg class="w-5 h-5 text-[var(--color-cat-optimization)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold mb-2">Performance Optimization</h3>
+        <p class="text-sm text-[var(--color-text-secondary)]">
+          CI/CD pipelines, build systems, and runtime performance. Making things faster from commit to production.
+        </p>
+      </div>
+
+      <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-xl p-6 card-hover">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--color-cat-architecture) 15%, transparent);">
+          <svg class="w-5 h-5 text-[var(--color-cat-architecture)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold mb-2">System Architecture</h3>
+        <p class="text-sm text-[var(--color-text-secondary)]">
+          Event-driven architectures, real-time processing pipelines, and distributed system design.
+        </p>
+      </div>
+
+      <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-xl p-6 card-hover">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--color-cat-infrastructure) 15%, transparent);">
+          <svg class="w-5 h-5 text-[var(--color-cat-infrastructure)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold mb-2">Cloud Infrastructure</h3>
+        <p class="text-sm text-[var(--color-text-secondary)]">
+          Kubernetes migrations, infrastructure as code, and cloud-native platform engineering.
+        </p>
+      </div>
+
+      <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-xl p-6 card-hover">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--color-cat-vision) 15%, transparent);">
+          <svg class="w-5 h-5 text-[var(--color-cat-vision)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold mb-2">Technical Vision</h3>
+        <p class="text-sm text-[var(--color-text-secondary)]">
+          AI-powered development workflows, agent orchestration, and next-generation tooling.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Positioning Statement -->
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+    <blockquote data-animate="fade" class="max-w-2xl mx-auto">
+      <p class="text-xl sm:text-2xl font-[var(--font-heading)] text-[var(--color-text-primary)] leading-relaxed italic">
+        "I believe the best systems are the ones you don't have to think about &mdash;
+        they just work, scale, and get out of your way."
+      </p>
+    </blockquote>
+  </section>
+</PageLayout>

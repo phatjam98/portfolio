@@ -1,0 +1,49 @@
+---
+title: "CI/CD Pipeline Optimization"
+subtitle: "Reducing build times from 45 minutes to under 10"
+description: "How I identified bottlenecks in a complex CI/CD pipeline and reduced build times by 78% through parallelization, caching, and infrastructure improvements."
+heroMetric: "45min → <10min"
+heroMetricLabel: "Build Time Reduction"
+tags: ["CI/CD", "DevOps", "Performance", "Gradle", "GitHub Actions"]
+publishDate: 2024-06-15
+order: 1
+status: "published"
+category: "optimization"
+---
+
+import BuildTimeChart from '../../components/charts/BuildTimeChart.astro';
+
+## The Problem
+
+Our team was shipping features across a multi-module Gradle monorepo with over 30 microservices. The CI/CD pipeline had grown organically over two years and was averaging 45 minutes per build. Developers were batching changes to avoid the feedback loop, which led to larger, riskier deployments and more merge conflicts. The slow pipeline was the single biggest drag on team velocity.
+
+Profiling the pipeline revealed several compounding issues: every build compiled all modules regardless of what changed, test suites ran sequentially, Docker layer caching was non-existent, and dependency resolution hit remote repositories on every run. The infrastructure itself was also undersized, with builds queuing behind each other during peak hours.
+
+## The Approach
+
+I took a three-phase approach. First, I introduced Gradle build caching and configured remote cache nodes shared across CI runners, eliminating redundant compilation for unchanged modules. I also implemented change-detection logic in GitHub Actions so that only affected modules and their dependents would build on each push.
+
+```mermaid
+graph LR
+    A[Code Push] --> B[Change Detection]
+    B --> C{Affected Modules?}
+    C -->|Yes| D[Parallel Build]
+    C -->|No| E[Skip]
+    D --> F[Unit Tests]
+    D --> G[Integration Tests]
+    F --> H[Docker Build]
+    G --> H
+    H --> I[Deploy]
+    style A fill:#10b981,color:#fff
+    style I fill:#10b981,color:#fff
+```
+
+Second, I restructured the test execution strategy. Unit tests ran in parallel across multiple runners using Gradle's `maxParallelForks`, while integration tests that required Testcontainers were isolated into a separate stage with dedicated resources. Docker builds were refactored to use multi-stage builds with proper layer ordering so that dependency layers were cached across builds.
+
+Third, I right-sized the CI infrastructure by moving to larger runner instances during business hours and implementing auto-scaling to handle peak load without queuing.
+
+## Results
+
+<BuildTimeChart beforeMinutes={45} afterMinutes={9} beforeLabel="Before" afterLabel="After" />
+
+The average pipeline time dropped from 45 minutes to under 10 minutes, a 78% reduction. Developers began pushing smaller, more frequent changes, and deployment frequency increased by 3x within the first month. The remote build cache alone saved over 200 hours of cumulative compute time per month, significantly reducing our CI costs alongside the time savings.

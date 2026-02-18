@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  type?: string;
+}
+
+const {
+  title,
+  description = 'Travis Carter - Senior Software Engineer & Architect',
+  image = '/og-image.png',
+  url = Astro.url.href,
+  type = 'website',
+} = Astro.props;
+
+const canonicalURL = new URL(url, Astro.site ?? Astro.url.origin).href;
+const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={imageURL} />
+    <meta property="og:site_name" content="Travis Carter" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+
+    <!-- JSON-LD Person Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Travis Carter",
+      "jobTitle": "Senior Software Engineer & Architect",
+      "url": "https://phatjam98.com",
+      "sameAs": ["https://github.com/phatjam98"]
+    })} />
+
+    <!-- FOUC prevention: apply saved theme before paint -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.classList.remove('dark', 'light');
+          document.documentElement.classList.add(theme);
+        }
+      })();
+    </script>
+
+    <!-- Font preloads -->
+    <link rel="preload" href="/fonts/Syne-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/SourceSans3-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+  </head>
+  <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)] font-[var(--font-body)]">
+    <!-- Skip to content -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100]
+             focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[var(--color-accent)]
+             focus:text-[var(--color-bg)] focus:font-semibold focus:text-sm"
+    >
+      Skip to content
+    </a>
+
+    <slot />
+    <script src="../scripts/scroll-animations.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import CaseStudyCard from '../../components/CaseStudyCard.astro';
+import { getCollection } from 'astro:content';
+
+const caseStudies = (await getCollection('case-studies'))
+  .filter((entry) => entry.data.status === 'published')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<PageLayout title="Case Studies | Travis Carter" description="Deep dives into distributed systems, performance optimization, and cloud infrastructure projects.">
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="max-w-3xl mb-12">
+      <h1 class="mb-4">Case Studies</h1>
+      <p data-animate="fade" class="text-lg text-[var(--color-text-secondary)]">
+        Deep dives into real-world engineering challenges. Each case study covers the problem, the approach,
+        and the measurable results.
+      </p>
+    </div>
+
+    {caseStudies.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {caseStudies.map((study, i) => (
+          <div data-animate="slide-up" data-animate-delay={String(Math.min(i + 1, 4))}>
+            <CaseStudyCard
+              slug={study.id}
+              title={study.data.title}
+              subtitle={study.data.subtitle}
+              description={study.data.description}
+              category={study.data.category}
+              tags={study.data.tags}
+              heroMetric={study.data.heroMetric}
+              heroMetricLabel={study.data.heroMetricLabel}
+            />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="text-[var(--color-text-muted)] text-center py-12">
+        Case studies coming soon.
+      </p>
+    )}
+  </section>
+</PageLayout>

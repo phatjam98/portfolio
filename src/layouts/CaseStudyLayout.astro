@@ -1,0 +1,67 @@
+---
+import PageLayout from './PageLayout.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import HeroMetric from '../components/HeroMetric.astro';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  description: string;
+  category: 'optimization' | 'architecture' | 'infrastructure' | 'vision';
+  tags: string[];
+  heroMetric?: string;
+  heroMetricLabel?: string;
+  publishDate?: Date;
+}
+
+const { title, subtitle, description, category, tags, heroMetric, heroMetricLabel, publishDate } = Astro.props;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "author": {
+    "@type": "Person",
+    "name": "Travis Carter"
+  },
+  ...(publishDate && { "datePublished": publishDate.toISOString() }),
+};
+---
+
+<PageLayout title={`${title} | Travis Carter`} description={description} type="article">
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
+  <!-- Hero Section -->
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="max-w-3xl">
+      <div class="flex items-center gap-4 mb-6">
+        <CategoryBadge category={category} />
+      </div>
+
+      <h1 class="mb-3">{title}</h1>
+      <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] mb-6">{subtitle}</p>
+
+      {heroMetric && heroMetricLabel && (
+        <div class="mb-8 p-6 glass-panel rounded-xl inline-block">
+          <HeroMetric metric={heroMetric} label={heroMetricLabel} />
+        </div>
+      )}
+
+      <div class="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span class="text-xs px-2 py-1 rounded-md bg-[var(--color-bg-surface)] text-[var(--color-text-muted)]">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto pb-16">
+    <div class="prose mx-auto lg:mx-0">
+      <slot />
+    </div>
+  </section>
+</PageLayout>

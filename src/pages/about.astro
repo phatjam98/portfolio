@@ -1,0 +1,90 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="About | Travis Carter" description="Senior Software Engineer & Architect focused on distributed systems, event-driven architectures, and developer platforms.">
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="max-w-3xl">
+      <h1 class="mb-6">About</h1>
+
+      <!-- Intro -->
+      <div class="prose">
+        <div data-animate="fade">
+          <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
+            I'm Travis Carter, a Senior Software Engineer & Architect with a focus on building
+            distributed systems that are reliable, observable, and fast. I work at the intersection
+            of backend architecture, cloud infrastructure, and developer experience.
+          </p>
+        </div>
+
+        <div data-animate="slide-up">
+          <h2>What I Do</h2>
+          <p>
+            My work spans the full lifecycle of complex systems &mdash; from initial architecture
+            design through implementation, deployment, and optimization. I'm particularly drawn to
+            problems that sit at the boundaries between systems: event-driven architectures, data
+            pipelines, and the tooling that makes teams productive.
+          </p>
+        </div>
+
+        <div data-animate="slide-up">
+          <h2>Technical Expertise</h2>
+          <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+            <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-4">
+              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Languages & Frameworks</h3>
+              <p class="text-sm text-[var(--color-text-secondary)]">
+                Java, Kotlin, TypeScript, Python. Micronaut, Spring Boot, Astro, React.
+              </p>
+            </div>
+            <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-4">
+              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Data & Streaming</h3>
+              <p class="text-sm text-[var(--color-text-secondary)]">
+                Apache Kafka, Apache Flink, Elasticsearch, PostgreSQL, Protocol Buffers.
+              </p>
+            </div>
+            <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-4">
+              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Infrastructure</h3>
+              <p class="text-sm text-[var(--color-text-secondary)]">
+                AWS, Kubernetes (EKS), Terraform, Docker, GitHub Actions, CI/CD.
+              </p>
+            </div>
+            <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-4">
+              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Practices</h3>
+              <p class="text-sm text-[var(--color-text-secondary)]">
+                Domain-Driven Design, Event Sourcing, TDD, Observability, Platform Engineering.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div data-animate="slide-up">
+          <h2>Open Source</h2>
+          <p>
+            I maintain several open-source libraries on Maven Central, including tools for
+            Protocol Buffer testing, Elasticsearch integrations, and Micronaut extensions.
+            I believe in building reusable, well-tested abstractions that help other developers
+            move faster.
+          </p>
+        </div>
+
+        <div data-animate="slide-up">
+          <h2>Philosophy</h2>
+          <p>
+            I believe the best engineering comes from deeply understanding the problem before
+            reaching for solutions. I value simplicity, clear boundaries, and systems that
+            are easy to reason about. When something breaks at 3 AM, the architecture should
+            make the root cause obvious.
+          </p>
+        </div>
+
+        <div data-animate="fade">
+          <h2>Connect</h2>
+          <p>
+            You can find me on <a href="https://github.com/phatjam98" target="_blank" rel="noopener noreferrer">GitHub</a>
+            or reach out on <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>

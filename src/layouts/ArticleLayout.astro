@@ -1,0 +1,73 @@
+---
+import PageLayout from './PageLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  publishDate: Date;
+  tags: string[];
+  category?: string;
+}
+
+const { title, description, publishDate, tags, category } = Astro.props;
+
+const formattedDate = publishDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "author": {
+    "@type": "Person",
+    "name": "Travis Carter"
+  },
+  "datePublished": publishDate.toISOString(),
+};
+---
+
+<PageLayout title={`${title} | Travis Carter`} description={description} type="article">
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
+  <!-- Hero Section -->
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="max-w-3xl">
+      <div class="flex items-center gap-3 mb-4">
+        <time
+          datetime={publishDate.toISOString()}
+          class="text-sm text-[var(--color-text-muted)]"
+        >
+          {formattedDate}
+        </time>
+        {category && (
+          <>
+            <span class="text-[var(--color-text-muted)]">&middot;</span>
+            <span class="text-sm text-[var(--color-text-muted)] capitalize">{category}</span>
+          </>
+        )}
+      </div>
+
+      <h1 class="mb-4">{title}</h1>
+      <p class="text-lg text-[var(--color-text-secondary)]">{description}</p>
+
+      <div class="flex flex-wrap gap-2 mt-6">
+        {tags.map((tag) => (
+          <span class="text-xs px-2 py-1 rounded-md bg-[var(--color-bg-surface)] text-[var(--color-text-muted)]">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto pb-16">
+    <div class="prose mx-auto lg:mx-0">
+      <slot />
+    </div>
+  </section>
+</PageLayout>

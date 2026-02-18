@@ -1,0 +1,23 @@
+---
+interface Props {
+  category: 'optimization' | 'architecture' | 'infrastructure' | 'vision';
+}
+
+const { category } = Astro.props;
+
+const categoryConfig = {
+  optimization: { label: 'Optimization', color: 'var(--color-cat-optimization)' },
+  architecture: { label: 'Architecture', color: 'var(--color-cat-architecture)' },
+  infrastructure: { label: 'Infrastructure', color: 'var(--color-cat-infrastructure)' },
+  vision: { label: 'Vision', color: 'var(--color-cat-vision)' },
+};
+
+const config = categoryConfig[category];
+---
+
+<span
+  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase"
+  style={`color: ${config.color}; background: color-mix(in srgb, ${config.color} 15%, transparent); border: 1px solid color-mix(in srgb, ${config.color} 30%, transparent);`}
+>
+  {config.label}
+</span>

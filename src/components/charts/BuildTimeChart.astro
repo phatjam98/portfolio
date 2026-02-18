@@ -1,0 +1,172 @@
+---
+interface Props {
+  beforeMinutes: number;
+  afterMinutes: number;
+  beforeLabel?: string;
+  afterLabel?: string;
+}
+
+const {
+  beforeMinutes,
+  afterMinutes,
+  beforeLabel = 'Before',
+  afterLabel = 'After',
+} = Astro.props;
+---
+
+<div
+  class="build-time-chart rounded-xl glass-panel p-6 my-8"
+  data-before={beforeMinutes}
+  data-after={afterMinutes}
+  data-before-label={beforeLabel}
+  data-after-label={afterLabel}
+>
+  <h4 class="text-sm font-semibold text-[var(--color-text-primary)] mb-4 font-[var(--font-heading)]">
+    Build Time Comparison
+  </h4>
+  <div class="chart-container" style="width: 100%; min-height: 200px;">
+    <svg class="w-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+</div>
+
+<script>
+  import * as d3 from 'd3';
+
+  function getThemeColors() {
+    const style = getComputedStyle(document.documentElement);
+    return {
+      accent: style.getPropertyValue('--color-accent').trim() || '#00e5ff',
+      muted: style.getPropertyValue('--color-text-muted').trim() || '#55556a',
+      secondary: style.getPropertyValue('--color-text-secondary').trim() || '#8888a0',
+      surface: style.getPropertyValue('--color-bg-surface').trim() || '#1a1a2e',
+      catOptimization: style.getPropertyValue('--color-cat-optimization').trim() || '#10b981',
+    };
+  }
+
+  function renderChart(container: Element) {
+    const svg = d3.select(container).select('svg');
+    const beforeMin = Number(container.getAttribute('data-before'));
+    const afterMin = Number(container.getAttribute('data-after'));
+    const beforeLabel = container.getAttribute('data-before-label') || 'Before';
+    const afterLabel = container.getAttribute('data-after-label') || 'After';
+
+    svg.selectAll('*').remove();
+
+    const colors = getThemeColors();
+    const width = 400;
+    const height = 200;
+    const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    const data = [
+      { label: beforeLabel, value: beforeMin, color: colors.muted },
+      { label: afterLabel, value: afterMin, color: colors.catOptimization },
+    ];
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.label))
+      .range([0, innerWidth])
+      .padding(0.4);
+
+    const y = d3.scaleLinear()
+      .domain([0, Math.max(beforeMin, afterMin) * 1.15])
+      .range([innerHeight, 0]);
+
+    // Y axis
+    g.append('g')
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d => `${d}m`))
+      .call(g => g.select('.domain').remove())
+      .call(g => g.selectAll('.tick line').attr('stroke', colors.surface))
+      .call(g => g.selectAll('.tick text').attr('fill', colors.secondary).style('font-size', '11px'));
+
+    // X axis
+    g.append('g')
+      .attr('transform', `translate(0,${innerHeight})`)
+      .call(d3.axisBottom(x).tickSize(0))
+      .call(g => g.select('.domain').attr('stroke', colors.surface))
+      .call(g => g.selectAll('.tick text').attr('fill', colors.secondary).style('font-size', '12px'));
+
+    // Grid lines
+    g.append('g')
+      .selectAll('line')
+      .data(y.ticks(5))
+      .join('line')
+      .attr('x1', 0)
+      .attr('x2', innerWidth)
+      .attr('y1', d => y(d))
+      .attr('y2', d => y(d))
+      .attr('stroke', colors.surface)
+      .attr('stroke-dasharray', '2,4')
+      .attr('opacity', 0.5);
+
+    // Bars with animation
+    const bars = g.selectAll('rect')
+      .data(data)
+      .join('rect')
+      .attr('x', d => x(d.label)!)
+      .attr('y', innerHeight)
+      .attr('width', x.bandwidth())
+      .attr('height', 0)
+      .attr('rx', 4)
+      .attr('fill', d => d.color);
+
+    bars.transition()
+      .duration(800)
+      .ease(d3.easeCubicOut)
+      .attr('y', d => y(d.value))
+      .attr('height', d => innerHeight - y(d.value));
+
+    // Value labels
+    g.selectAll('.value-label')
+      .data(data)
+      .join('text')
+      .attr('class', 'value-label')
+      .attr('x', d => x(d.label)! + x.bandwidth() / 2)
+      .attr('y', d => y(d.value) - 8)
+      .attr('text-anchor', 'middle')
+      .attr('fill', d => d.color)
+      .style('font-size', '13px')
+      .style('font-weight', '600')
+      .text(d => `${d.value}min`);
+  }
+
+  function initCharts() {
+    const charts = document.querySelectorAll('.build-time-chart');
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    charts.forEach((chart) => {
+      if (prefersReducedMotion) {
+        renderChart(chart);
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              renderChart(entry.target);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+      observer.observe(chart);
+    });
+
+    // Re-render on theme change
+    window.addEventListener('theme-change', () => {
+      charts.forEach(renderChart);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCharts);
+  } else {
+    initCharts();
+  }
+</script>

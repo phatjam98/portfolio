@@ -1,0 +1,137 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/case-studies', label: 'Case Studies' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/about', label: 'About' },
+];
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-[var(--color-border)]">
+  <nav aria-label="Main navigation" class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Logo -->
+      <a
+        href="/"
+        class="font-[var(--font-heading)] text-xl font-bold tracking-tight text-[var(--color-accent)] hover:text-[var(--color-accent-dim)] transition-colors duration-200"
+      >
+        TC
+      </a>
+
+      <!-- Desktop nav links -->
+      <div class="hidden lg:flex items-center gap-1">
+        {navLinks.map(({ href, label }) => (
+          <a
+            href={href}
+            class:list={[
+              'px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
+              isActive(href)
+                ? 'text-[var(--color-accent)] bg-[var(--color-accent-glow)]'
+                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface)]',
+            ]}
+            aria-current={isActive(href) ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        ))}
+
+        <div class="ml-2 pl-2 border-l border-[var(--color-border)]">
+          <ThemeToggle />
+        </div>
+      </div>
+
+      <!-- Mobile controls -->
+      <div class="flex items-center gap-2 lg:hidden">
+        <ThemeToggle />
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          class="flex items-center justify-center w-10 h-10 rounded-lg
+                 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]
+                 hover:bg-[var(--color-bg-surface)] transition-colors duration-200"
+        >
+          <!-- Hamburger icon -->
+          <svg id="menu-icon-open" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <!-- Close icon -->
+          <svg id="menu-icon-close" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div
+      id="mobile-menu"
+      class="hidden lg:hidden overflow-hidden transition-all duration-300 ease-in-out"
+      style="max-height: 0;"
+    >
+      <div class="pb-4 pt-2 space-y-1 border-t border-[var(--color-border)]">
+        {navLinks.map(({ href, label }) => (
+          <a
+            href={href}
+            class:list={[
+              'block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200',
+              isActive(href)
+                ? 'text-[var(--color-accent)] bg-[var(--color-accent-glow)]'
+                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface)]',
+            ]}
+            aria-current={isActive(href) ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  btn?.addEventListener('click', () => {
+    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+    const newExpanded = !isExpanded;
+
+    btn.setAttribute('aria-expanded', String(newExpanded));
+
+    if (menu) {
+      if (newExpanded) {
+        menu.classList.remove('hidden');
+        // Trigger reflow then animate
+        requestAnimationFrame(() => {
+          menu.style.maxHeight = menu.scrollHeight + 'px';
+        });
+      } else {
+        menu.style.maxHeight = '0';
+        menu.addEventListener('transitionend', () => {
+          if (btn.getAttribute('aria-expanded') === 'false') {
+            menu.classList.add('hidden');
+          }
+        }, { once: true });
+      }
+    }
+
+    iconOpen?.classList.toggle('hidden', newExpanded);
+    iconClose?.classList.toggle('hidden', !newExpanded);
+  });
+</script>

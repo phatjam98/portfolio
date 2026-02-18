@@ -1,0 +1,24 @@
+---
+title: "Protocol Buffers Meet Elasticsearch"
+description: "Building a type-safe ORM layer between Protocol Buffers and Elasticsearch using Micronaut."
+tags: ["Protobuf", "Elasticsearch", "Micronaut", "Java", "Open Source"]
+publishDate: 2024-08-20
+status: "published"
+category: "engineering"
+---
+
+## The Problem
+
+Protocol Buffers provide a strongly-typed, language-neutral schema for data, while Elasticsearch offers powerful full-text search and analytics. However, bridging the two has traditionally required a significant amount of boilerplate: manually mapping Protobuf fields to Elasticsearch document fields, writing serialization logic, and hand-coding query builders. This boilerplate is tedious, error-prone, and becomes a maintenance burden as schemas evolve. Every time a `.proto` file changes, developers must remember to update the corresponding Elasticsearch mappings and serialization code.
+
+In projects where Protobuf is already the canonical data format, the lack of a type-safe integration layer between Protobuf and Elasticsearch forces teams to either duplicate schema definitions or accept runtime mapping errors that only surface during integration testing.
+
+## The Approach
+
+I built an open-source ORM-style library for Micronaut that treats Protobuf message definitions as the single source of truth for Elasticsearch document mappings. The library automatically generates Elasticsearch index mappings from `.proto` field types and annotations, handles serialization and deserialization between Protobuf messages and Elasticsearch documents, and provides a repository pattern inspired by Spring Data for common CRUD and query operations.
+
+The design leverages Micronaut's compile-time dependency injection to avoid the reflection overhead typical of ORM frameworks. Custom annotations on Protobuf fields control indexing behavior, such as specifying analyzers for text fields or marking fields as keyword-only. The repository interfaces are resolved at compile time, catching type mismatches and configuration errors before the application starts rather than at runtime.
+
+## Results
+
+The library eliminates the boilerplate of manually managing Protobuf-to-Elasticsearch mappings, reducing the integration code for a typical service by roughly 70%. Schema changes propagate automatically from `.proto` definitions through to Elasticsearch mappings, removing an entire class of drift-related bugs. The library is published to Maven Central as open source and is used across multiple internal services where Protobuf and Elasticsearch are part of the data pipeline.

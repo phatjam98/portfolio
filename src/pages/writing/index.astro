@@ -1,0 +1,41 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+const articles = (await getCollection('writing'))
+  .filter((entry) => entry.data.status === 'published')
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+---
+
+<PageLayout title="Writing | Travis Carter" description="Technical articles on distributed systems, open source, and software architecture.">
+  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="max-w-3xl mb-12">
+      <h1 class="mb-4">Writing</h1>
+      <p data-animate="fade" class="text-lg text-[var(--color-text-secondary)]">
+        Technical articles and thoughts on distributed systems, software architecture,
+        and the tools that help us build better software.
+      </p>
+    </div>
+
+    {articles.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {articles.map((article, i) => (
+          <div data-animate="slide-up" data-animate-delay={String(Math.min(i + 1, 4))}>
+            <ArticleCard
+              slug={article.id}
+              title={article.data.title}
+              description={article.data.description}
+              publishDate={article.data.publishDate}
+              tags={article.data.tags}
+            />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="text-[var(--color-text-muted)] text-center py-12">
+        Articles coming soon.
+      </p>
+    )}
+  </section>
+</PageLayout>
