@@ -1,14 +1,8 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { navLinks } from '../data/navigation';
 
 const currentPath = Astro.url.pathname;
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/case-studies', label: 'Case Studies' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/about', label: 'About' },
-];
 
 function isActive(href: string): boolean {
   if (href === '/') return currentPath === '/';
@@ -56,6 +50,7 @@ function isActive(href: string): boolean {
           id="mobile-menu-btn"
           type="button"
           aria-expanded="false"
+          aria-controls="mobile-menu"
           aria-label="Toggle navigation"
           class="flex items-center justify-center w-10 h-10 rounded-lg
                  text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]
