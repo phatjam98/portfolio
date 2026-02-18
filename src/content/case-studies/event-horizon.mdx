@@ -13,7 +13,7 @@ category: "architecture"
 
 ## The Problem
 
-Traditional monitoring systems rely on static thresholds and predefined rules, which means they can only catch problems you already know about. As system complexity grows, the number of unknown failure modes grows faster. Our operations team was spending significant time investigating false alerts from rigid threshold-based monitors while genuine anomalies in complex, multi-service interactions went undetected until customers reported them.
+Traditional monitoring systems rely on static thresholds and predefined rules, which means they can only catch problems you already know about. As system complexity grows, the number of unknown failure modes grows even faster. Our operations team was spending significant time investigating false alerts from rigid threshold-based monitors, while genuine anomalies in complex, multi-service interactions went undetected until customers reported them.
 
 We needed a platform that could ingest high-volume event streams from dozens of services, detect subtle deviations from normal behavior in real time, and provide actionable context to on-call engineers without overwhelming them with noise.
 
@@ -44,7 +44,7 @@ graph TB
     style F fill:#06b6d4,color:#fff
 ```
 
-The ML integration uses a sidecar pattern where lightweight anomaly scoring models run alongside Flink operators. For novel or ambiguous anomalies, the system leverages LLM integration to correlate detected anomalies with recent deployment events, configuration changes, and historical incident data to generate human-readable explanations. This contextual enrichment dramatically reduces the mean time to understand an alert.
+The ML integration uses a sidecar pattern where lightweight anomaly scoring models run alongside Flink operators. For novel or ambiguous anomalies, the system leverages LLM integration to correlate detections with recent deployment events, configuration changes, and historical incident data, generating human-readable explanations. This contextual enrichment dramatically reduces the mean time to understand an alert.
 
 ## Results
 
