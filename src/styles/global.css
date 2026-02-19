@@ -126,6 +126,7 @@ html.light {
 /* ── Utility Layer ── */
 @layer utilities {
   .glass-panel {
+    background: rgba(18, 18, 26, 0.8);
     background: color-mix(in srgb, var(--color-bg-elevated) 80%, transparent);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -133,11 +134,18 @@ html.light {
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
+    color: var(--color-accent);
+    -webkit-text-fill-color: var(--color-accent);
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .text-gradient {
+      background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   .section-spacing {
@@ -229,6 +237,11 @@ html.light {
   border-color: var(--color-border);
   margin: 3em 0;
 }
+.prose .mermaid,
+.prose pre.mermaid {
+  overflow-x: auto;
+  max-width: 100%;
+}
 
 /* ── Scroll Animations ── */
 [data-animate] {
@@ -275,7 +288,14 @@ body::after {
   pointer-events: none;
   z-index: 9999;
   opacity: 0.03;
+  will-change: transform;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
+}
+
+@media (max-width: 768px) {
+  body::after {
+    display: none;
+  }
 }

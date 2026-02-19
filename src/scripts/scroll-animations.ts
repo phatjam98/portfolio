@@ -28,10 +28,5 @@ const initScrollAnimations = () => {
   });
 };
 
-// Run on page load and on Astro page transitions
+// Run on page load and on Astro page transitions (astro:page-load fires on initial load too)
 document.addEventListener('astro:page-load', initScrollAnimations);
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initScrollAnimations);
-} else {
-  initScrollAnimations();
-}

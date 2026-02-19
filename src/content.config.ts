@@ -15,6 +15,10 @@ const caseStudies = defineCollection({
     order: z.number(),
     status: z.enum(['published', 'draft']),
     category: z.enum(['optimization', 'architecture', 'infrastructure', 'vision']),
+    role: z.string().optional(),
+    company: z.string().optional(),
+    teamSize: z.string().optional(),
+    duration: z.string().optional(),
   }),
 });
 
