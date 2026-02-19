@@ -4,147 +4,148 @@ import PageLayout from '../layouts/PageLayout.astro';
 
 <PageLayout title="About | Travis Carter" description="Senior Software Engineer & Architect focused on distributed systems, event-driven architectures, and developer platforms.">
   <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-3xl">
-      <h1 class="mb-6">About</h1>
+    <h1 class="mb-6">About</h1>
 
-      <!-- Intro -->
-      <div class="prose">
-        <div data-animate="fade" class="flex flex-col sm:flex-row gap-8 items-start mb-8">
-          <!-- Add professional headshot here: place image in public/images/headshot.jpg and uncomment -->
-          <!-- <img src="/images/headshot.jpg" alt="Travis Carter" class="w-40 h-40 rounded-xl object-cover flex-shrink-0" /> -->
-          <div>
-            <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-              I'm Travis Carter, a Senior Software Engineer & Architect with a focus on building
-              distributed systems that are reliable, observable, and fast. I work at the intersection
-              of backend architecture, cloud infrastructure, and developer experience.
-            </p>
-          </div>
-        </div>
+    <!-- Intro -->
+    <div data-animate="fade" class="flex flex-col sm:flex-row gap-8 items-start mb-8">
+      <!-- Add professional headshot here: place image in public/images/headshot.jpg and uncomment -->
+      <!-- <img src="/images/headshot.jpg" alt="Travis Carter" class="w-40 h-40 rounded-xl object-cover flex-shrink-0" /> -->
+      <div>
+        <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
+          I'm Travis Carter, a Senior Software Engineer & Architect with a focus on building
+          distributed systems that are reliable, observable, and fast. I work at the intersection
+          of backend architecture, cloud infrastructure, and developer experience.
+        </p>
+      </div>
+    </div>
 
-        <!-- Impact Metrics -->
-        <div data-animate="slide-up" class="not-prose grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
-          <div class="glass-panel rounded-lg p-5 text-center">
-            <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">78%</p>
-            <p class="text-sm text-[var(--color-text-muted)] mt-1">Build time reduction</p>
-          </div>
-          <div class="glass-panel rounded-lg p-5 text-center">
-            <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">100+</p>
-            <p class="text-sm text-[var(--color-text-muted)] mt-1">Services migrated, zero downtime</p>
-          </div>
-          <div class="glass-panel rounded-lg p-5 text-center">
-            <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">&lt; 200ms</p>
-            <p class="text-sm text-[var(--color-text-muted)] mt-1">Anomaly detection latency</p>
-          </div>
-        </div>
+    <!-- Impact Metrics -->
+    <div data-animate="slide-up" class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
+      <div class="glass-panel rounded-lg p-5 text-center">
+        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">78%</p>
+        <p class="text-sm text-[var(--color-text-muted)] mt-1">Build time reduction</p>
+      </div>
+      <div class="glass-panel rounded-lg p-5 text-center">
+        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">100+</p>
+        <p class="text-sm text-[var(--color-text-muted)] mt-1">Services migrated, zero downtime</p>
+      </div>
+      <div class="glass-panel rounded-lg p-5 text-center">
+        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">&lt; 200ms</p>
+        <p class="text-sm text-[var(--color-text-muted)] mt-1">Anomaly detection latency</p>
+      </div>
+    </div>
 
-        <!-- Career Journey -->
-        <div data-animate="slide-up">
-          <h2>Career Journey</h2>
-          <p class="text-sm text-[var(--color-text-muted)] italic mb-6">
-            Replace the placeholder entries below with your actual career history.
-          </p>
-          <div class="not-prose space-y-6 my-6">
-            <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-accent)]">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Current Role Title] &mdash; [Company Name]</h3>
-                <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; Present]</span>
-              </div>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                [Brief description of role, scope, and key accomplishments. e.g., "Leading architecture for distributed event processing platform. Managing team of X engineers. Designed and built real-time anomaly detection system processing millions of events."]
-              </p>
-            </div>
-            <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-architecture)]">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Previous Role Title] &mdash; [Company Name]</h3>
-                <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; 20XX]</span>
-              </div>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                [Brief description. e.g., "Migrated 100+ services across EKS clusters with zero downtime. Optimized CI/CD pipelines, cutting build times by 78%."]
-              </p>
-            </div>
-            <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-infrastructure)]">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Earlier Role Title] &mdash; [Company Name]</h3>
-                <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; 20XX]</span>
-              </div>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                [Brief description of earlier career experience that shows growth trajectory.]
-              </p>
-            </div>
+    <!-- Career Journey -->
+    <div data-animate="slide-up" class="mt-16">
+      <h2 class="mb-2">Career Journey</h2>
+      <p class="text-sm text-[var(--color-text-muted)] italic mb-6">
+        Replace the placeholder entries below with your actual career history.
+      </p>
+      <div class="space-y-6">
+        <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-accent)]">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Current Role Title] &mdash; [Company Name]</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; Present]</span>
           </div>
-        </div>
-
-        <div data-animate="slide-up">
-          <h2>What I Do</h2>
-          <p>
-            My work spans the full lifecycle of complex systems &mdash; from initial architecture
-            design through implementation, deployment, and optimization. I'm particularly drawn to
-            problems that sit at the boundaries between systems: event-driven architectures, data
-            pipelines, and the tooling that makes teams productive.
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            [Brief description of role, scope, and key accomplishments. e.g., "Leading architecture for distributed event processing platform. Managing team of X engineers. Designed and built real-time anomaly detection system processing millions of events."]
           </p>
         </div>
-
-        <div data-animate="slide-up">
-          <h2>Technical Expertise</h2>
-          <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
-            <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-4">
-              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Languages & Frameworks</h3>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                Java, Kotlin, TypeScript, Python. Micronaut, Spring Boot, Astro, React.
-              </p>
-            </div>
-            <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-4">
-              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Data & Streaming</h3>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                Apache Kafka, Apache Flink, Elasticsearch, PostgreSQL, Protocol Buffers.
-              </p>
-            </div>
-            <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-4">
-              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Infrastructure</h3>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                AWS, Kubernetes (EKS), Terraform, Docker, GitHub Actions, CI/CD.
-              </p>
-            </div>
-            <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-4">
-              <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Practices</h3>
-              <p class="text-sm text-[var(--color-text-secondary)]">
-                Domain-Driven Design, Event Sourcing, TDD, Observability, Platform Engineering.
-              </p>
-            </div>
+        <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-architecture)]">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Previous Role Title] &mdash; [Company Name]</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; 20XX]</span>
           </div>
-        </div>
-
-        <div data-animate="slide-up">
-          <h2>Open Source</h2>
-          <p>
-            I maintain several open-source libraries on Maven Central, including tools for
-            Protocol Buffer testing, Elasticsearch integrations, and Micronaut extensions.
-            I believe in building reusable, well-tested abstractions that help other developers
-            move faster.
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            [Brief description. e.g., "Migrated 100+ services across EKS clusters with zero downtime. Optimized CI/CD pipelines, cutting build times by 78%."]
           </p>
         </div>
-
-        <div data-animate="slide-up">
-          <h2>Philosophy</h2>
-          <p>
-            I believe the best engineering comes from deeply understanding the problem before
-            reaching for solutions. I value simplicity, clear boundaries, and systems that
-            are easy to reason about. When something breaks at 3 AM, the architecture should
-            make the root cause obvious.
-          </p>
-        </div>
-
-        <div data-animate="fade">
-          <h2>Get in Touch</h2>
-          <p>
-            I'm always open to discussing distributed systems challenges, platform engineering,
-            and interesting technical problems. Reach out via
-            <a href="mailto:hello@phatjam98.com">email</a>,
-            connect on <a href="https://www.linkedin.com/in/travis-carter/" target="_blank" rel="noopener noreferrer">LinkedIn</a>,
-            or check out my work on <a href="https://github.com/phatjam98" target="_blank" rel="noopener noreferrer">GitHub</a>.
+        <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-infrastructure)]">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Earlier Role Title] &mdash; [Company Name]</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; 20XX]</span>
+          </div>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            [Brief description of earlier career experience that shows growth trajectory.]
           </p>
         </div>
       </div>
+    </div>
+
+    <!-- What I Do -->
+    <div data-animate="slide-up" class="prose mt-16">
+      <h2>What I Do</h2>
+      <p>
+        My work spans the full lifecycle of complex systems &mdash; from initial architecture
+        design through implementation, deployment, and optimization. I'm particularly drawn to
+        problems that sit at the boundaries between systems: event-driven architectures, data
+        pipelines, and the tooling that makes teams productive.
+      </p>
+    </div>
+
+    <!-- Technical Expertise -->
+    <div data-animate="slide-up" class="mt-16">
+      <h2 class="mb-6">Technical Expertise</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Languages & Frameworks</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            Java, Kotlin, TypeScript, Python. Micronaut, Spring Boot, Astro, React.
+          </p>
+        </div>
+        <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Data & Streaming</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            Apache Kafka, Apache Flink, Elasticsearch, PostgreSQL, Protocol Buffers.
+          </p>
+        </div>
+        <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Infrastructure</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            AWS, Kubernetes (EKS), Terraform, Docker, GitHub Actions, CI/CD.
+          </p>
+        </div>
+        <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Practices</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            Domain-Driven Design, Event Sourcing, TDD, Observability, Platform Engineering.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open Source -->
+    <div data-animate="slide-up" class="prose mt-16">
+      <h2>Open Source</h2>
+      <p>
+        I maintain several open-source libraries on Maven Central, including tools for
+        Protocol Buffer testing, Elasticsearch integrations, and Micronaut extensions.
+        I believe in building reusable, well-tested abstractions that help other developers
+        move faster.
+      </p>
+    </div>
+
+    <!-- Philosophy -->
+    <div data-animate="slide-up" class="prose mt-16">
+      <h2>Philosophy</h2>
+      <p>
+        I believe the best engineering comes from deeply understanding the problem before
+        reaching for solutions. I value simplicity, clear boundaries, and systems that
+        are easy to reason about. When something breaks at 3 AM, the architecture should
+        make the root cause obvious.
+      </p>
+    </div>
+
+    <!-- Get in Touch -->
+    <div data-animate="fade" class="prose mt-16">
+      <h2>Get in Touch</h2>
+      <p>
+        I'm always open to discussing distributed systems challenges, platform engineering,
+        and interesting technical problems. Reach out via
+        <a href="mailto:hello@phatjam98.com">email</a>,
+        connect on <a href="https://www.linkedin.com/in/travis-carter/" target="_blank" rel="noopener noreferrer">LinkedIn</a>,
+        or check out my work on <a href="https://github.com/phatjam98" target="_blank" rel="noopener noreferrer">GitHub</a>.
+      </p>
     </div>
   </section>
 </PageLayout>
