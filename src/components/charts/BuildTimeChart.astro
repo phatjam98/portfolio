@@ -25,12 +25,18 @@ const {
     Build Time Comparison
   </h4>
   <div class="chart-container" style="width: 100%; min-height: 200px;">
-    <svg class="w-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
+    <svg class="w-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Bar chart comparing build times: ${beforeLabel} at ${beforeMinutes} minutes versus ${afterLabel} at ${afterMinutes} minutes`}>
+      <desc>A bar chart showing build time reduction from {beforeMinutes} minutes ({beforeLabel}) to {afterMinutes} minutes ({afterLabel}), a {Math.round((1 - afterMinutes / beforeMinutes) * 100)}% improvement.</desc>
+    </svg>
   </div>
 </div>
 
 <script>
-  import * as d3 from 'd3';
+  import { select } from 'd3-selection';
+  import { scaleBand, scaleLinear } from 'd3-scale';
+  import { axisLeft, axisBottom } from 'd3-axis';
+  import { easeCubicOut } from 'd3-ease';
+  import 'd3-transition';
 
   function getThemeColors() {
     const style = getComputedStyle(document.documentElement);
@@ -44,7 +50,7 @@ const {
   }
 
   function renderChart(container: Element) {
-    const svg = d3.select(container).select('svg');
+    const svg = select(container).select('svg');
     const beforeMin = Number(container.getAttribute('data-before'));
     const afterMin = Number(container.getAttribute('data-after'));
     const beforeLabel = container.getAttribute('data-before-label') || 'Before';
@@ -66,18 +72,18 @@ const {
 
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-    const x = d3.scaleBand()
+    const x = scaleBand()
       .domain(data.map(d => d.label))
       .range([0, innerWidth])
       .padding(0.4);
 
-    const y = d3.scaleLinear()
+    const y = scaleLinear()
       .domain([0, Math.max(beforeMin, afterMin) * 1.15])
       .range([innerHeight, 0]);
 
     // Y axis
     g.append('g')
-      .call(d3.axisLeft(y).ticks(5).tickFormat(d => `${d}m`))
+      .call(axisLeft(y).ticks(5).tickFormat(d => `${d}m`))
       .call(g => g.select('.domain').remove())
       .call(g => g.selectAll('.tick line').attr('stroke', colors.surface))
       .call(g => g.selectAll('.tick text').attr('fill', colors.secondary).style('font-size', '11px'));
@@ -85,7 +91,7 @@ const {
     // X axis
     g.append('g')
       .attr('transform', `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x).tickSize(0))
+      .call(axisBottom(x).tickSize(0))
       .call(g => g.select('.domain').attr('stroke', colors.surface))
       .call(g => g.selectAll('.tick text').attr('fill', colors.secondary).style('font-size', '12px'));
 
@@ -115,7 +121,7 @@ const {
 
     bars.transition()
       .duration(800)
-      .ease(d3.easeCubicOut)
+      .ease(easeCubicOut)
       .attr('y', d => y(d.value))
       .attr('height', d => innerHeight - y(d.value));
 

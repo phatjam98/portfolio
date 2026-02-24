@@ -16,16 +16,22 @@ interface Props {
 
 const { title, subtitle, description, category, tags, heroMetric, heroMetricLabel, publishDate } = Astro.props;
 
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const imageURL = new URL('/og-image.png', Astro.site ?? Astro.url.origin).href;
+
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": title,
   "description": description,
+  "url": canonicalURL,
+  "image": imageURL,
   "author": {
     "@type": "Person",
     "name": "Travis Carter"
   },
   ...(publishDate && { "datePublished": publishDate.toISOString() }),
+  ...(publishDate && { "dateModified": publishDate.toISOString() }),
 };
 ---
 
