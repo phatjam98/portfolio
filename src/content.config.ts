@@ -34,4 +34,18 @@ const writing = defineCollection({
   }),
 });
 
-export const collections = { 'case-studies': caseStudies, writing };
+const explorations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/explorations' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    description: z.string(),
+    tags: z.array(z.string()),
+    publishDate: z.coerce.date(),
+    order: z.number(),
+    status: z.enum(['published', 'draft']),
+    category: z.string().optional(),
+  }),
+});
+
+export const collections = { 'case-studies': caseStudies, writing, explorations };

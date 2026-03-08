@@ -20,7 +20,7 @@ const caseStudies = (await getCollection('case-studies'))
       </h1>
       <p data-animate="fade" class="text-lg sm:text-xl text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mb-8">
         I design and build event-driven architectures, real-time platforms, and developer tooling.
-        100+ services migrated with zero downtime. CI pipelines cut from 45 to 10 minutes. Sub-200ms anomaly detection.
+        100+ services migrated with zero downtime. CI pipelines cut from 47 to under 8 minutes.
       </p>
       <div data-animate="fade" class="flex flex-wrap gap-4">
         <a
@@ -90,7 +90,7 @@ const caseStudies = (await getCollection('case-studies'))
         </div>
         <h3 class="text-lg font-semibold mb-2">Performance Optimization</h3>
         <p class="text-sm text-[var(--color-text-secondary)]">
-          Reduced CI/CD build times by 78% through parallelization, caching, and infrastructure improvements.
+          Reduced CI/CD build times by 83% by replacing Dockerfile builds with JIB and adding per-app change detection.
         </p>
       </a>
 
@@ -102,7 +102,7 @@ const caseStudies = (await getCollection('case-studies'))
         </div>
         <h3 class="text-lg font-semibold mb-2">System Architecture</h3>
         <p class="text-sm text-[var(--color-text-secondary)]">
-          Real-time anomaly detection with sub-200ms latency using Flink, Kafka, and event-driven design.
+          Real-time anomaly detection using Flink, Kafka, and event-driven design across multiple industries.
         </p>
       </a>
 
@@ -114,21 +114,21 @@ const caseStudies = (await getCollection('case-studies'))
         </div>
         <h3 class="text-lg font-semibold mb-2">Cloud Infrastructure</h3>
         <p class="text-sm text-[var(--color-text-secondary)]">
-          Migrated 100+ services across EKS clusters with zero downtime using automated rollback strategies.
+          Upgraded EKS clusters to v1.32 across 100+ services with zero downtime as a solo DevOps engineer.
         </p>
       </a>
 
-      <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-xl p-6 card-hover">
+      <a href="/explorations" data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-xl p-6 card-hover block no-underline">
         <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--color-cat-vision) 15%, transparent);">
           <svg class="w-5 h-5 text-[var(--color-cat-vision)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
           </svg>
         </div>
-        <h3 class="text-lg font-semibold mb-2">Technical Vision</h3>
+        <h3 class="text-lg font-semibold mb-2">Explorations</h3>
         <p class="text-sm text-[var(--color-text-secondary)]">
-          AI-powered development workflows, agent orchestration, and next-generation tooling.
+          AI agent orchestration, shared context layers, and next-generation developer tooling.
         </p>
-      </div>
+      </a>
     </div>
   </section>
 

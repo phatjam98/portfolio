@@ -1,20 +1,15 @@
 ---
 import PageLayout from './PageLayout.astro';
-import CategoryBadge from '../components/CategoryBadge.astro';
-import HeroMetric from '../components/HeroMetric.astro';
 
 interface Props {
   title: string;
   subtitle: string;
   description: string;
-  category: 'optimization' | 'architecture' | 'infrastructure' | 'vision';
   tags: string[];
-  heroMetric?: string;
-  heroMetricLabel?: string;
   publishDate?: Date;
 }
 
-const { title, subtitle, description, category, tags, heroMetric, heroMetricLabel, publishDate } = Astro.props;
+const { title, subtitle, description, tags, publishDate } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 const imageURL = new URL('/og-image.png', Astro.site ?? Astro.url.origin).href;
@@ -42,17 +37,13 @@ const articleSchema = {
   <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
     <div class="max-w-4xl">
       <div class="flex items-center gap-4 mb-6">
-        <CategoryBadge category={category} />
+        <span class="text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[color-mix(in_srgb,var(--color-cat-vision)_15%,transparent)] text-[var(--color-cat-vision)]">
+          Exploration
+        </span>
       </div>
 
       <h1 class="mb-3">{title}</h1>
       <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] mb-6">{subtitle}</p>
-
-      {heroMetric && heroMetricLabel && (
-        <div class="mb-8 p-6 glass-panel rounded-xl inline-block">
-          <HeroMetric metric={heroMetric} label={heroMetricLabel} />
-        </div>
-      )}
 
       <div class="flex flex-wrap gap-2">
         {tags.map((tag) => (

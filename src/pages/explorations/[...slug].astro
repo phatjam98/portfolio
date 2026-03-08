@@ -1,0 +1,27 @@
+---
+import ExplorationLayout from '../../layouts/ExplorationLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('explorations');
+  return entries
+    .filter((entry) => entry.data.status === 'published')
+    .map((entry) => ({
+      params: { slug: entry.id },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ExplorationLayout
+  title={entry.data.title}
+  subtitle={entry.data.subtitle}
+  description={entry.data.description}
+  tags={entry.data.tags}
+  publishDate={entry.data.publishDate}
+>
+  <Content />
+</ExplorationLayout>
