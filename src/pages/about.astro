@@ -8,13 +8,12 @@ import PageLayout from '../layouts/PageLayout.astro';
 
     <!-- Intro -->
     <div data-animate="fade" class="flex flex-col sm:flex-row gap-8 items-start mb-8">
-      <!-- Add professional headshot here: place image in public/images/headshot.jpg and uncomment -->
-      <!-- <img src="/images/headshot.jpg" alt="Travis Carter" class="w-40 h-40 rounded-xl object-cover flex-shrink-0" /> -->
       <div>
         <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
-          I'm Travis Carter, a Senior Software Engineer & Architect with a focus on building
-          distributed systems that are reliable, observable, and fast. I work at the intersection
-          of backend architecture, cloud infrastructure, and developer experience.
+          I'm Travis Carter, a self-taught Senior Software Engineer & Architect who built two
+          careers the same way &mdash; by learning on the job and pushing higher. I spent a decade
+          in civil engineering before teaching myself to code during the Great Recession, and I've
+          been building distributed systems, streaming platforms, and cloud infrastructure ever since.
         </p>
       </div>
     </div>
@@ -22,7 +21,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     <!-- Impact Metrics -->
     <div data-animate="slide-up" class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
       <div class="glass-panel rounded-lg p-5 text-center">
-        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">78%</p>
+        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">83%</p>
         <p class="text-sm text-[var(--color-text-muted)] mt-1">Build time reduction</p>
       </div>
       <div class="glass-panel rounded-lg p-5 text-center">
@@ -30,43 +29,82 @@ import PageLayout from '../layouts/PageLayout.astro';
         <p class="text-sm text-[var(--color-text-muted)] mt-1">Services migrated, zero downtime</p>
       </div>
       <div class="glass-panel rounded-lg p-5 text-center">
-        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">&lt; 200ms</p>
-        <p class="text-sm text-[var(--color-text-muted)] mt-1">Anomaly detection latency</p>
+        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">4+</p>
+        <p class="text-sm text-[var(--color-text-muted)] mt-1">Industries, one streaming engine</p>
       </div>
     </div>
 
     <!-- Career Journey -->
     <div data-animate="slide-up" class="mt-16">
       <h2 class="mb-2">Career Journey</h2>
-      <p class="text-sm text-[var(--color-text-muted)] italic mb-6">
-        Replace the placeholder entries below with your actual career history.
-      </p>
       <div class="space-y-6">
         <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-accent)]">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Current Role Title] &mdash; [Company Name]</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; Present]</span>
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Sr. Software Engineer &mdash; ECFX</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">Oct 2023 &ndash; Present</span>
           </div>
           <p class="text-sm text-[var(--color-text-secondary)]">
-            [Brief description of role, scope, and key accomplishments. e.g., "Leading architecture for distributed event processing platform. Managing team of X engineers. Designed and built real-time anomaly detection system processing millions of events."]
+            Full-stack engineer and platform architect at a law-tech startup. Sole owner of DevOps and infrastructure.
+            Refactored CI/CD pipelines to cut build times from 45 minutes to under 10 with selective build and deploy.
+            Upgraded a six-year-old codebase to Micronaut 4 and Hibernate 6, and introduced Claude Code workflows
+            that accelerated the team's development velocity.
           </p>
         </div>
         <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-architecture)]">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Previous Role Title] &mdash; [Company Name]</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; 20XX]</span>
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Director of Platform Engineering &mdash; PHC</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">Oct 2021 &ndash; Mar 2024</span>
           </div>
           <p class="text-sm text-[var(--color-text-secondary)]">
-            [Brief description. e.g., "Migrated 100+ services across EKS clusters with zero downtime. Optimized CI/CD pipelines, cutting build times by 78%."]
+            Led platform engineering at a health-tech Series A startup during the pandemic. Owned architecture,
+            system design, and the development roadmap. Built a real-time risk anomaly detection and notification
+            platform from scratch using Flink, Elasticsearch, Protobufs, and Micronaut. Created a custom Flink
+            StateFun mixed-language framework for processors in Java and Python.
           </p>
         </div>
         <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-infrastructure)]">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">[Earlier Role Title] &mdash; [Company Name]</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">[20XX &ndash; 20XX]</span>
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Sr. Software Engineer &mdash; Globality</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">Oct 2020 &ndash; Oct 2021</span>
           </div>
           <p class="text-sm text-[var(--color-text-secondary)]">
-            [Brief description of earlier career experience that shows growth trajectory.]
+            Implemented Kubernetes cluster architecture and deployed vCluster (Loft) to give the engineering team
+            sandboxed development environments, improving developer workflow across a 20-person engineering org.
+          </p>
+        </div>
+        <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-accent)]">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Sr. Software Engineer &mdash; Banjo</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">Aug 2014 &ndash; Aug 2020</span>
+          </div>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            Six formative years at a fast-paced startup building real-time event processing and anomaly detection
+            systems. Built an automation API that cut discovery-to-notification times from 7 minutes to under
+            30 seconds. Created an inter-agency code coordination framework for law enforcement, fire, and safety
+            agencies. Worked across the full stack &mdash; Flink, Kafka, Elasticsearch, Java, Ruby, Python &mdash;
+            in an environment where everyone shared knowledge and owned everything.
+          </p>
+        </div>
+        <div data-animate="slide-up" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-architecture)]">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Frontend Developer</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">Nov 2011 &ndash; Aug 2014</span>
+          </div>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            Early software career building JavaScript SPAs and UX. Rewrote an ASP.NET site into a true
+            single-page application using Knockout.js and Durandal.js.
+          </p>
+        </div>
+        <div data-animate="slide-up" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-infrastructure)]">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Civil Engineering Draftsman &amp; Project Designer</h3>
+            <span class="text-sm text-[var(--color-text-muted)]">2001 &ndash; 2011</span>
+          </div>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            A decade of plan creation, project design, and engineering approvals. Drafted plans for Big Horn
+            Golf Course in Palm Springs, designed the Blue Diamond shopping complex in Las Vegas, and trained
+            engineers in Dubai on Autodesk Civil 3D for the Palm Islands project. Self-taught AutoCAD before
+            graduating high school. When the 2008 recession hit, taught myself to code and pivoted to software.
           </p>
         </div>
       </div>
@@ -76,10 +114,11 @@ import PageLayout from '../layouts/PageLayout.astro';
     <div data-animate="slide-up" class="prose mt-16">
       <h2>What I Do</h2>
       <p>
-        My work spans the full lifecycle of complex systems &mdash; from initial architecture
-        design through implementation, deployment, and optimization. I'm particularly drawn to
-        problems that sit at the boundaries between systems: event-driven architectures, data
-        pipelines, and the tooling that makes teams productive.
+        Most senior engineers have spent their career in one area of the stack. I've spent meaningful
+        time in all of them &mdash; platform, frontend, data, DevOps, infrastructure. My work spans
+        the full lifecycle of complex systems, from architecture design through deployment and
+        optimization. I'm particularly drawn to problems at the boundaries between systems:
+        event-driven architectures, streaming pipelines, and the tooling that makes teams productive.
       </p>
     </div>
 
@@ -102,7 +141,7 @@ import PageLayout from '../layouts/PageLayout.astro';
         <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-4">
           <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Infrastructure</h3>
           <p class="text-sm text-[var(--color-text-secondary)]">
-            AWS, Kubernetes (EKS), Terraform, Docker, GitHub Actions, CI/CD.
+            AWS, Kubernetes (EKS), Terraform, Docker, GitLab CI, GitHub Actions.
           </p>
         </div>
         <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-4">
