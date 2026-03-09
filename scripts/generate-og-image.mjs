@@ -38,7 +38,7 @@ const svg = `
   <text x="${width/2}" y="360" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="bold" fill="#e0e0e8">Travis Carter</text>
 
   <!-- Subtitle -->
-  <text x="${width/2}" y="420" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#8888a0">Senior Software Engineer &amp; Architect</text>
+  <text x="${width/2}" y="420" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#8888a0">Software Architect</text>
 
   <!-- Divider line -->
   <rect x="${width/2 - 100}" y="460" width="200" height="2" fill="url(#accent)" opacity="0.6"/>

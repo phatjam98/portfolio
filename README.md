@@ -1,6 +1,6 @@
-# phatjam98.com — Personal Portfolio
+# phatjam98.com - Personal Portfolio
 
-Personal portfolio site for Travis Carter, Senior Software Engineer & Architect. Showcases case studies in distributed systems, event-driven architectures, and cloud infrastructure.
+Personal portfolio site for Travis Carter, Software Architect. Showcases case studies in distributed systems, event-driven architectures, and cloud infrastructure.
 
 **Live site**: [phatjam98.com](https://phatjam98.com)
 
