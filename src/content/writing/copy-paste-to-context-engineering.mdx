@@ -9,46 +9,94 @@ category: "engineering"
 
 ## A Year Ago
 
-In early 2025, I was deep in a complex upgrade: Micronaut 1 to 4, Gradle 7 to 8, Hibernate 5 to 6, and a cascade of dependency changes across a 32-project monolith. There were no tests of any kind. I was manually running, debugging, and refactoring large sections of the codebase by hand.
+In early 2025, I was deep in one of the most painful upgrades I had taken on in years: Micronaut 1 to 4, Gradle 7 to 8, Hibernate 5 to 6, and a cascade of transitive dependency failures cascading across a 32-project monolith. The codebase had no tests of any kind. Not unit tests, not integration tests, nothing. Every change was a manual run-debug-refactor loop. I was doing archaeology with a toothbrush.
 
-I used ChatGPT and Claude as chatbots. Copy a stack trace, paste it in, read the suggestion, go back to my editor and try it. It helped at the margins, but the workflow was entirely manual. The AI was a search engine with better natural language understanding, nothing more.
+I was using ChatGPT and Claude the way most engineers were at the time, as a smarter search engine. Copy a stack trace, paste it in, read the suggestion, go back to my editor and try it. Useful at the margins, but entirely manual. The feedback loop was slow, and the AI had no idea what the rest of my codebase looked like. It was answering questions in isolation while I was fighting a system-level problem.
+
+The upgrade dragged on. My background is in distributed systems and event-driven architecture. I have spent over a decade designing platforms that handle complex data flows at scale. I can navigate a hard problem. But this was the kind of work that just grinds you down because there is no cleverness that helps you. It is just volume and no safety net.
+
+---
 
 ## The Weekend That Changed Everything
 
-By June 2025, "vibe coding" was everywhere. Agents writing code, shipping features, entire applications generated from prompts. I started worrying about the future of my career. So one weekend I installed Claude Code and started experimenting.
+By June 2025, the noise around agentic development had become impossible to ignore. Agents writing code, closing tickets, shipping entire services from prompts. I am not someone who chases trends, but I also did not spend a decade in platform engineering without developing a healthy respect for signals that something real is happening. One weekend I installed Claude Code and started actually experimenting with it.
 
-The first few days were small: bug investigations, AWS infrastructure questions, things I would have Googled. Then about two weeks in, something clicked. I had developed some interesting workflows and a custom agent with multiple modules (this was before Claude announced Skills). My first real project was ambitious: use Claude Code to read my local PostgreSQL database schema and write a brand new, clean data library of Micronaut 4 Data entities.
+The first week was underwhelming in the best possible way. Bug investigations. AWS infrastructure questions. Things I would have Googled or stack-traced myself. I was calibrating the tool, learning where it was sharp and where it struggled. I was not impressed enough to change anything yet.
 
-The original data library was buried inside the platform monolith. This was a clean rewrite into an independent library repository hosted in AWS CodeArtifact. It took three days at four to five hours a day. What came out the other end was the entire Postgres schema created as JPA entities, complete Micronaut integration tests using TestResources, and full documentation. All tested, all passing.
+Around two weeks in, something shifted. I had started building a custom agent with multiple specialized modules (this was before Anthropic released Skills as a formal feature) and I decided to give it a real problem. Not a toy project. My actual work.
 
-I modified that same agent and pointed it at the next task: a new REST API service to replace one of the monolith applications. This service consumed the new data library and was written completely by Claude Code. Fully tested, fully documented. Two days.
+The task: read the schema from my local PostgreSQL database and write an entirely new, clean data library of Micronaut 4 Data entities. The original data layer was buried inside the monolith, tightly coupled to everything around it. The goal was a clean rewrite into an independent library hosted in AWS CodeArtifact that other services could consume without dragging in the entire platform.
+
+It took three days at four to five hours a day. What came out the other end was the entire Postgres schema recreated as JPA entities, with proper relationship annotations, nullability constraints, and index hints, along with complete Micronaut integration tests using TestResources, and full documentation. All tested. All passing. My review of the output took longer than I expected, not because it was wrong, but because it was thorough in ways I had not explicitly asked for.
+
+I modified that same agent and pointed it at the next task immediately: a new REST API service to replace one of the monolith applications, consuming the new data library. Fully tested. Fully documented. Two days.
+
+I stood back and looked at what had just happened. Work that would have taken me two to three weeks, not because I couldn't do it but because of the sheer volume of it, was done in five days with high test coverage and clean architecture. That was the moment this went from interesting to foundational.
+
+---
+
+## Presenting to the Room
+
+A few months in, I was asked to present my workflow to a group of VPs of Engineering, Software Architects, and technical leaders at my company. These were not people who needed convincing that AI was real. They needed to understand what serious, production-oriented adoption actually looked like versus the demos they had been seeing.
+
+I walked them through two workflows in detail.
+
+The first was a cross-account KMS migration. We had stood up a new Duplo-managed Kubernetes development environment, but all our encrypted data still referenced KMS keys from the legacy AWS account. I described the architecture to Claude Code: two accounts, encrypted datasets, need to decrypt and re-encrypt without exposing data in transit. We worked through it together: cross-account IAM policies, KMS grants, a decrypt/re-encrypt pipeline with verification steps, new CMK provisioning in Duplo, and cleanup automation. Work that would have taken me two to three days of AWS documentation archaeology and trial and error took about four hours. It also produced audit-ready IaC artifacts for reuse.
+
+The second was the Hibernate entity regeneration story I described above.
+
+What I made clear to the room was that I was not using AI as a code generation shortcut. I was using Claude Code as a collaborative platform engineer, one that could hold context across multiple services, execute complex multi-step workflows, and generate production-quality code with tests. My job was architecture, judgment, and review. Its job was execution volume.
+
+The shift in the room from "will this replace us" to "how do I get this into my workflow" happened faster than I expected.
+
+---
 
 ## The Evolution
 
-The pattern continued as I refined the approach. When Claude announced Skills, my multi-module agent became less useful. The fix was straightforward: I built a streamlined v2 agent and refactored the modules into Skills. The agent loads the skills it needs, but now other agents and the main session can use those same skills too. Much more flexible.
+The workflow did not stay static. It kept improving, and some of that improvement came from things not working the way I expected.
 
-I added hooks and commands to automate workflows and build protections into them. MCP integrations connected Claude Code to external services. Each piece made the next project faster and more reliable.
+When Anthropic released Skills, my multi-module custom agent became an awkward solution to a problem that now had a cleaner answer. I rebuilt it: a streamlined v2 agent that loads skills contextually, with those same skills available to other agents and the main session. Much more composable. The original approach had been the right move at the time, but the right move for the time is not always the right move going forward.
+
+I added hooks to automate workflow steps and build guardrails into them. I added custom commands for patterns I used repeatedly. MCP integrations gave Claude Code reach into external services. Each addition compounded. Projects that took three days now took one. The ceiling kept moving.
+
+What I also learned was what failed. A personas system I tried did not play out the way I had designed it in my head. Complex rebasing workflows hit context limits I had not anticipated. An S3 to Micronaut Object Storage migration proved harder than it should have been because I had not given the agent enough upfront context about the legacy implementation. I ended up doing parts of it by hand. In retrospect, I could make all of those work now. I know exactly where I underinvested in context. But at the time, doing it by hand was the only realistic option, and I made that call without a lot of hand-wringing. Knowing when to hand-code and when to delegate is still an engineering judgment call.
+
+---
 
 ## What the Workflow Looks Like Today
 
-Every repository has a `CLAUDE.md` at its root with project-specific instructions, conventions, and architectural context. A `docs/` directory holds TDD learnings, design documents, and investigation notes that persist across sessions. My global `~/.claude/CLAUDE.md` defines branching strategies, platform-specific rules (GitLab vs GitHub), and general instructions that apply everywhere.
+Every repository has a `CLAUDE.md` at its root. Not a placeholder. An actual document with project-specific conventions, architectural context, patterns we use and patterns we explicitly avoid, and notes from past sessions that informed how we work in this codebase. My global `~/.claude/CLAUDE.md` handles things that apply everywhere: branching strategies, GitLab-specific rules, general standards. A `docs/` directory in each repo holds TDD learnings, design documents, and investigation notes that persist across sessions so context does not have to be rebuilt from scratch every time.
 
-The most important principle I have learned: TDD is the key to successful agent workflows. It forces the agent to test its own work in real time. Failing tests provide specific, actionable context. Having that validation step in the development loop is invaluable. Without it, agents drift. With it, they self-correct.
+The session workflow follows a deliberate sequence. For any significant task, I start in Plan Mode. I almost never accept the first version of the plan. Not because it is wrong, usually it is mostly right, but because a step is framed slightly off, or I have not provided context that changes the approach, or the sequencing reveals a dependency I had not thought through explicitly. The planning phase is where I want to find those gaps. Finding them in the plan costs nothing. Finding them after three hours of implementation costs everything.
 
-For any significant task, I start in Plan mode and almost never accept the first version of the plan. Something is usually not quite right in a step or two, or I have forgotten to provide context that changes the approach. The planning phase is where I catch those gaps before any code is written.
+Once I agree to the plan, I have the agent commit it to documentation before any code is written. Then we execute. My role during execution is monitoring, intervention, and judgment. When it runs into something unexpected, like a compilation failure, a test that cannot pass with the current approach, or an API that does not behave the way the documentation implied, I step in, assess the situation, provide the corrected context, and have the agent update its working documents with what it learned. The agent gets smarter about the specific problem as we go.
 
-At the end of all work, the agent creates a branch, commits, pushes, and opens a merge request or pull request for my review. I leave comments, request changes, and have the agent review the MR/PR comments, commit, and push updates for re-review. The same code review workflow I would use with a human engineer.
+I am not hesitant to stop mid-task and redirect. The plan is not a contract. It is a starting point. If something I see mid-execution changes what the right answer is, I say so.
+
+At the end, the agent creates a branch, commits, pushes, and opens a merge request. I review it the same way I would review a PR from a junior engineer: comments, change requests, back-and-forth. The agent reads the MR comments, addresses them, commits, and pushes for re-review. The code review workflow is identical to what I use with human engineers. That discipline matters.
+
+The most important single principle in all of this: **TDD is the key to successful agent workflows.** It is not optional. Without it, agents drift. They produce code that appears to work until something touches an edge case. With TDD, failing tests provide specific, actionable context. The agent can see exactly what is wrong and self-correct in the same loop. The test suite becomes the ground truth that keeps everything honest. This is also why the engineers who have been disciplined about documentation and testing for years are the ones who find this transition natural. They already built the infrastructure that makes it work.
+
+---
 
 ## The Big Win
 
-The most impressive result so far has been the Micronaut 1 to 4 upgrade, the same upgrade I was struggling through manually a year ago. My team has adopted these workflows and we have created and closed over 50 Jira tickets in two weeks as we push toward permanent production deployment. Every class that gets a fix or refactor gets comprehensive Spock integration tests. The upgrade that felt impossible twelve months ago is now on the verge of shipping.
+The most significant result of the past year has been finishing the Micronaut 1 to 4 upgrade. The same upgrade I was grinding through manually twelve months ago.
+
+My team adopted these workflows. We created and closed over 50 Jira tickets in two weeks as we pushed toward production deployment. The approach we settled on: every class that gets touched, whether for a fix, a refactor, or a migration, gets comprehensive Spock integration tests written for it before the work is considered done. We are not retrofitting tests onto finished code. We are using the upgrade as the forcing function to build the test coverage we should have had years ago, in real time, as the work happens.
+
+The upgrade that felt genuinely impossible twelve months ago is on the verge of shipping.
+
+---
 
 ## What I Have Learned
 
-Nothing about context engineering has truly surprised me, and I think that is because the fundamentals are things I have always believed in. Good documentation. Meaningful code comments. Comprehensive testing. These are the things most engineers hate doing and put off indefinitely. They are also the things that are fundamental to making AI-assisted development work. The engineers who have been disciplined about documentation and testing are the ones who will find this transition natural.
+None of the fundamentals of context engineering surprised me, and I think that is because the things that make AI-assisted development work are the things I have always believed in as an engineer. Good documentation. Meaningful code comments. Comprehensive testing. These are the things most engineers deprioritize because they feel like overhead when you are moving fast. They are also the things that are load-bearing when you put an AI agent into the loop.
 
-Not everything worked. I tried a personas system that did not play out the way I wanted. I attempted some complex rebasing workflows and a migration to replace legacy S3 components with Micronaut Object Storage that proved too difficult with the context I provided. I am confident I could make those work now with more detailed upfront context, but at the time, doing it by hand was the only realistic option.
+The engineers who have been disciplined about this stuff, who write the CLAUDE.md equivalent in their heads even when it does not exist as a file, are the ones who find this transition natural. They already know how to give good context. They already know that clarity in the plan prevents waste in the execution. They already believe that tests are not optional.
 
-## For the Skeptics
+The engineers who struggle are the ones who expected the tool to compensate for the shortcuts they have been taking. It does not. It amplifies whatever foundation you give it, good or bad.
 
-When an engineer tells me they are skeptical about AI-assisted development, I tell them to sit with me for 30 minutes on one of their own tasks. Not a demo, not a toy project, their actual work. That is usually enough to shift the conversation from "will this replace me" to "how do I make this work for my workflow." These tools do not replace engineering skill. They amplify it. The engineers who understand their systems deeply are the ones who get the most out of them.
+For the skeptics: I do not argue with skeptics anymore. I ask them to sit with me for thirty minutes on something from their actual backlog, not a demo, not a contrived example, their real work. That is usually enough to move the conversation from "will this replace me" to "how do I build this into my process."
+
+These tools do not replace engineering skill. They amplify it. The engineers who understand their systems deeply, who think architecturally, who have always cared about the quality of their documentation and tests, they are the ones who get the most out of this. That has not changed. What has changed is that doing the work right finally scales.
