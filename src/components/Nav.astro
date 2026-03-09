@@ -1,14 +1,8 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { navLinks } from '../data/navigation';
 
 const currentPath = Astro.url.pathname;
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/case-studies', label: 'Case Studies' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/about', label: 'About' },
-];
 
 function isActive(href: string): boolean {
   if (href === '/') return currentPath === '/';
@@ -56,19 +50,20 @@ function isActive(href: string): boolean {
           id="mobile-menu-btn"
           type="button"
           aria-expanded="false"
+          aria-controls="mobile-menu"
           aria-label="Toggle navigation"
           class="flex items-center justify-center w-10 h-10 rounded-lg
                  text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]
                  hover:bg-[var(--color-bg-surface)] transition-colors duration-200"
         >
           <!-- Hamburger icon -->
-          <svg id="menu-icon-open" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="menu-icon-open" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
           <!-- Close icon -->
-          <svg id="menu-icon-close" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="menu-icon-close" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -133,5 +128,23 @@ function isActive(href: string): boolean {
 
     iconOpen?.classList.toggle('hidden', newExpanded);
     iconClose?.classList.toggle('hidden', !newExpanded);
+  });
+
+  // Close mobile menu on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
+      btn.setAttribute('aria-expanded', 'false');
+      if (menu) {
+        menu.style.maxHeight = '0';
+        menu.addEventListener('transitionend', () => {
+          if (btn.getAttribute('aria-expanded') === 'false') {
+            menu.classList.add('hidden');
+          }
+        }, { once: true });
+      }
+      iconOpen?.classList.remove('hidden');
+      iconClose?.classList.add('hidden');
+      btn.focus();
+    }
   });
 </script>

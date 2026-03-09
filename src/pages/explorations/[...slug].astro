@@ -1,9 +1,9 @@
 ---
-import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
+import ExplorationLayout from '../../layouts/ExplorationLayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('case-studies');
+  const entries = await getCollection('explorations');
   return entries
     .filter((entry) => entry.data.status === 'published')
     .map((entry) => ({
@@ -16,19 +16,12 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<CaseStudyLayout
+<ExplorationLayout
   title={entry.data.title}
   subtitle={entry.data.subtitle}
   description={entry.data.description}
-  category={entry.data.category}
   tags={entry.data.tags}
-  heroMetric={entry.data.heroMetric}
-  heroMetricLabel={entry.data.heroMetricLabel}
   publishDate={entry.data.publishDate}
-  role={entry.data.role}
-  company={entry.data.company}
-  teamSize={entry.data.teamSize}
-  duration={entry.data.duration}
 >
   <Content />
-</CaseStudyLayout>
+</ExplorationLayout>

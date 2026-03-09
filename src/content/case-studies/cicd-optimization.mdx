@@ -1,49 +1,57 @@
 ---
 title: "CI/CD Pipeline Optimization"
-subtitle: "Reducing build times from 45 minutes to under 10"
-description: "How I identified bottlenecks in a complex CI/CD pipeline and reduced build times by 78% through parallelization, caching, and infrastructure improvements."
-heroMetric: "45min → <10min"
+subtitle: "Reducing build times from 47 minutes to under 8"
+description: "How I restructured a monolith's build system and CI pipeline: replacing Dockerfile builds with JIB, adding per-app change detection, and cutting pipeline times by 83%."
+heroMetric: "47min → <8min"
 heroMetricLabel: "Build Time Reduction"
-tags: ["CI/CD", "DevOps", "Performance", "Gradle", "GitHub Actions"]
-publishDate: 2024-06-15
+tags: ["CI/CD", "DevOps", "Performance", "Gradle", "GitLab CI", "JIB"]
+publishDate: 2025-06-15
 order: 1
 status: "published"
 category: "optimization"
+role: "Senior Software Engineer"
+company: "Law-tech startup"
+teamSize: "Team of 7 engineers"
+duration: "3 weeks"
 ---
 
 import BuildTimeChart from '../../components/charts/BuildTimeChart.astro';
 
 ## The Problem
 
-Our team was shipping features across a multi-module Gradle monorepo with over 30 microservices. The CI/CD pipeline had grown organically over two years and was averaging 45 minutes per build. Developers were batching changes to avoid the feedback loop, which led to larger, riskier deployments and more merge conflicts. The slow pipeline was the single biggest drag on team velocity.
+I was working at a law-tech company with a small engineering team, seven of us total, including the VP of Engineering. Six months earlier, the company had cut ties with the contracting firm that originally built and maintained the entire platform. We were still discovering "bombs" the contractors had left behind: tangled library dependencies, badly constructed applications, and infrastructure decisions that no one on the internal team had been consulted on.
 
-Profiling the pipeline revealed several compounding issues: every build compiled all modules regardless of what changed, test suites ran sequentially, Docker layer caching was non-existent, and dependency resolution hit remote repositories on every run. The infrastructure itself was also undersized, with builds queuing behind each other during peak hours.
+The platform was a Micronaut 1 monolith comprising 32 Gradle projects: 17 applications and 15 libraries. The CI pipeline was a single GitLab build job that used a Dockerfile to sequentially build every application's Docker image and push it to the container registry. Even if I changed a single line in one application, the pipeline rebuilt all 17 images. With Snyk security scanning enabled, pipeline times hit 47 minutes. Without Snyk, they still ran around 34 minutes. There was no parallelism, no change detection, and no way to build or test images locally.
 
 ## The Approach
 
-I took a three-phase approach. First, I introduced Gradle build caching and configured remote cache nodes shared across CI runners, eliminating redundant compilation for unchanged modules. I also implemented change-detection logic in GitHub Actions so that only affected modules and their dependents would build on each push.
+I hadn't set out to fix the pipeline. I'd been tasked with upgrading the monolith from Micronaut 1 to Micronaut 4, a major migration that also meant moving from Hibernate 5 to 6, Java 11 to 17, and Gradle 7 to 8. The slow CI was painfully impeding my dev cycle on that upgrade work, so I started solving the build problem as a prerequisite.
 
 ```mermaid
 graph LR
     A[Code Push] --> B[Change Detection]
-    B --> C{Affected Modules?}
-    C -->|Yes| D[Parallel Build]
-    C -->|No| E[Skip]
-    D --> F[Unit Tests]
-    D --> G[Integration Tests]
-    F --> H[Docker Build]
-    G --> H
-    H --> I[Deploy]
+    B --> C{Affected Apps?}
+    C -->|Yes| D[Build Changed Apps]
+    C -->|No| E[Skip Build]
+    D --> F[JIB Image Build]
+    F --> G[Push to Registry]
+    G --> H[Deploy]
     style A fill:#10b981,color:#fff
-    style I fill:#10b981,color:#fff
+    style H fill:#10b981,color:#fff
 ```
 
-Second, I restructured the test execution strategy. Unit tests ran in parallel across multiple runners using Gradle's `maxParallelForks`, while integration tests that required Testcontainers were isolated into a separate stage with dedicated resources. Docker builds were refactored to use multi-stage builds with proper layer ordering so that dependency layers were cached across builds.
+First, I replaced the Dockerfile-based builds with the **Gradle JIB plugin**. JIB builds container images directly from Gradle without needing a Docker daemon, which meant I could build and push images locally during development instead of waiting for CI. This alone transformed my feedback loop on the Micronaut 4 migration.
 
-Third, I right-sized the CI infrastructure by moving to larger runner instances during business hours and implementing auto-scaling to handle peak load without queuing.
+Second, I **rewrote the Gradle build structure** to be modern and modular, untangling the library dependencies that the contractors had left intertwined. This was necessary groundwork; without clean dependency boundaries, change detection would have been impossible.
+
+Third, I created **child `gitlab-ci` files for each application** with rules that only triggered a build and deploy when that specific app's code, or the code of any library it depended on, had changed. Instead of one monolithic job rebuilding everything, each application had its own targeted pipeline.
+
+The tipping point for merging these changes into the main branch came when the VP of Engineering hit the same 40-minute wall while trying to get logging and metrics instrumentation deployed. He started voicing what the whole team had been quietly enduring. I took the opportunity to migrate the JIB and CI changes I'd already built and proven on my upgrade branch into master.
 
 ## Results
 
-<BuildTimeChart beforeMinutes={45} afterMinutes={9} beforeLabel="Before" afterLabel="After" />
+<BuildTimeChart beforeMinutes={47} afterMinutes={8} beforeLabel="Before (with Snyk)" afterLabel="After" />
 
-The average pipeline time dropped from 45 minutes to under 10 minutes, a 78% reduction. Developers began pushing smaller, more frequent changes, and deployment frequency increased by 3x within the first month. The remote build cache alone saved over 200 hours of cumulative compute time per month, significantly reducing our CI costs alongside the time savings.
+Pipeline times dropped from 47 minutes to under 8 minutes, an 83% reduction. The numbers come directly from GitLab's pipeline analytics, where we could see both total pipeline time and per-job breakdowns. Even without Snyk in the comparison, the improvement was dramatic: 34 minutes down to under 8.
+
+I identified, pitched, and executed this entirely on my own over the course of three weeks, while simultaneously making progress on the Micronaut 4 upgrade that had motivated the work in the first place. The optimized pipeline removed what had been the single biggest source of friction for the entire seven-person engineering team, a team that was already stretched thin recovering from the contractor transition.

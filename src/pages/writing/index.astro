@@ -19,7 +19,7 @@ const articles = (await getCollection('writing'))
     </div>
 
     {articles.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {articles.map((article, i) => (
           <div data-animate="slide-up" data-animate-delay={String(Math.min(i + 1, 4))}>
             <ArticleCard

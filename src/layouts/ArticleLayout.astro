@@ -17,16 +17,22 @@ const formattedDate = publishDate.toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const imageURL = new URL('/og-image.png', Astro.site ?? Astro.url.origin).href;
+
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": title,
   "description": description,
+  "url": canonicalURL,
+  "image": imageURL,
   "author": {
     "@type": "Person",
     "name": "Travis Carter"
   },
   "datePublished": publishDate.toISOString(),
+  "dateModified": publishDate.toISOString(),
 };
 ---
 
@@ -35,7 +41,7 @@ const articleSchema = {
 
   <!-- Hero Section -->
   <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-3xl">
+    <div class="max-w-4xl">
       <div class="flex items-center gap-3 mb-4">
         <time
           datetime={publishDate.toISOString()}
@@ -66,7 +72,7 @@ const articleSchema = {
 
   <!-- Content -->
   <section class="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto pb-16">
-    <div class="prose mx-auto lg:mx-0">
+    <div class="prose max-w-4xl mx-auto">
       <slot />
     </div>
   </section>

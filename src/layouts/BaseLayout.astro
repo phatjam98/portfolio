@@ -11,7 +11,7 @@ interface Props {
 
 const {
   title,
-  description = 'Travis Carter - Senior Software Engineer & Architect',
+  description = 'Travis Carter - Software Architect',
   image = '/og-image.png',
   url = Astro.url.href,
   type = 'website',
@@ -43,6 +43,7 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={imageURL} />
     <meta property="og:site_name" content="Travis Carter" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -55,9 +56,9 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Travis Carter",
-      "jobTitle": "Senior Software Engineer & Architect",
+      "jobTitle": "Software Architect",
       "url": "https://phatjam98.com",
-      "sameAs": ["https://github.com/phatjam98"]
+      "sameAs": ["https://github.com/phatjam98", "https://www.linkedin.com/in/travis-carter/"]
     })} />
 
     <!-- FOUC prevention: apply saved theme before paint -->
@@ -75,7 +76,7 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
     <link rel="preload" href="/fonts/Syne-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/SourceSans3-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- JetBrains Mono loads on-demand via font-display: swap when code blocks are rendered -->
 
   </head>
   <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)] font-[var(--font-body)]">

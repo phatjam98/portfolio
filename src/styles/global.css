@@ -45,7 +45,7 @@
   --color-secondary: #ffab40;
   --color-text-primary: #f0f0f5;
   --color-text-secondary: #8888a0;
-  --color-text-muted: #55556a;
+  --color-text-muted: #7a7a92;
   --color-border: #2a2a3e;
 
   --font-heading: 'Syne', system-ui, sans-serif;
@@ -63,11 +63,13 @@ html.light {
   --color-bg: #fafafa;
   --color-bg-elevated: #ffffff;
   --color-bg-surface: #f0f0f5;
+  --color-accent: #0088a0;
+  --color-accent-dim: #006b80;
   --color-text-primary: #1a1a2e;
   --color-text-secondary: #55556a;
-  --color-text-muted: #8888a0;
+  --color-text-muted: #6e6e85;
   --color-border: #e0e0e8;
-  --color-accent-glow: rgba(0, 229, 255, 0.08);
+  --color-accent-glow: rgba(0, 136, 160, 0.08);
 }
 
 /* ── Base Layer ── */
@@ -126,6 +128,7 @@ html.light {
 /* ── Utility Layer ── */
 @layer utilities {
   .glass-panel {
+    background: var(--color-bg-elevated);
     background: color-mix(in srgb, var(--color-bg-elevated) 80%, transparent);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -133,10 +136,18 @@ html.light {
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--color-accent);
+    -webkit-text-fill-color: var(--color-accent);
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .text-gradient {
+      background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   .section-spacing {
@@ -159,7 +170,6 @@ html.light {
 
 /* ── Prose Styling (for MDX content) ── */
 .prose {
-  max-width: 72ch;
   color: var(--color-text-secondary);
   line-height: 1.8;
 }
@@ -228,6 +238,11 @@ html.light {
   border-color: var(--color-border);
   margin: 3em 0;
 }
+.prose .mermaid,
+.prose pre.mermaid {
+  overflow-x: auto;
+  max-width: 100%;
+}
 
 /* ── Scroll Animations ── */
 [data-animate] {
@@ -277,4 +292,10 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
+}
+
+@media (max-width: 768px) {
+  body::after {
+    display: none;
+  }
 }

@@ -1,43 +1,62 @@
 ---
 title: "EKS Cluster Migrations"
-subtitle: "Zero-downtime Kubernetes migrations across AWS accounts"
-description: "Managing large-scale EKS cluster migrations with zero downtime, including cross-account networking, service mesh integration, and automated rollback."
+subtitle: "Zero-downtime Kubernetes upgrade under deadline pressure"
+description: "Upgrading EKS clusters to v1.32 and migrating Karpenter to v1 across 100+ production services with zero downtime, all as a solo DevOps engineer racing to avoid extended support charges."
 heroMetric: "0"
 heroMetricLabel: "Minutes of Downtime"
-tags: ["Kubernetes", "AWS", "EKS", "Infrastructure", "Migration"]
-publishDate: 2024-03-20
+tags: ["Kubernetes", "AWS", "EKS", "Terraform", "Karpenter"]
+publishDate: 2025-11-10
 order: 3
 status: "published"
 category: "infrastructure"
+role: "Sr. Software Engineer"
+company: "Law-tech startup"
+teamSize: "Solo"
+duration: "1 month"
 ---
 
 ## The Problem
 
-Our organization needed to migrate multiple EKS clusters from a legacy AWS account structure to a new multi-account landing zone. The clusters ran over 100 production services handling real-time traffic, and the business requirement was clear: zero customer-facing downtime during the migration. The legacy clusters were running outdated Kubernetes versions, had accumulated configuration drift, and used networking patterns incompatible with the new account topology.
+I was the only engineer on a seven-person team with DevOps and infrastructure experience. After the contractors who had originally built our infrastructure left, I became the default DevOps engineer, despite it being my least favorite part of the stack.
 
-Adding to the complexity, services communicated through a mix of internal load balancers, service mesh routes, and direct pod-to-pod networking. Any migration strategy had to maintain all of these communication paths during the transition period when services would be split across old and new clusters.
+The immediate problem was our EKS clusters. They were running outdated Kubernetes versions that were approaching end of standard support, and AWS would begin charging extended support fees for every cluster that wasn't upgraded to 1.32. With multiple clusters running over 100 production services, those charges would add up fast. On top of that, the Terraform codebase the contractors had left behind was in rough shape. Plans wouldn't validate cleanly, and there were issues in both the plan and apply stages that had to be resolved before any upgrade work could begin.
+
+The biggest technical challenge was Karpenter. Our clusters were running a pre-v1 version, and the upgrade to Karpenter v1 was a significant breaking change that touched node provisioning, configuration schemas, and cluster autoscaling behavior. Getting that migration right was critical, because Karpenter manages the compute that all our services run on.
+
+To complicate matters further, midway through the upgrade project we signed a deal with Duplo Cloud to eventually migrate our environments to their platform. But we couldn't stop the EKS upgrade; the extended support charges were already looming. I had to finish the work knowing the infrastructure would eventually be migrated anyway. It was a pragmatic call: pay the charges or finish the upgrade. We finished the upgrade.
 
 ## The Approach
 
-I designed a phased migration strategy anchored by cross-account VPC peering and a shared service mesh control plane. First, I established network connectivity between the old and new accounts using AWS Transit Gateway, ensuring pods in the new clusters could communicate with services still running in the legacy environment. An Istio service mesh spanned both clusters, providing transparent service discovery and traffic routing across the boundary.
+I started by stabilizing the existing Terraform. The entire infrastructure lived in a single Terraform repository, and I had to fix validation errors and broken plan/apply pipelines before I could safely make changes. Once the Terraform was healthy, I planned the EKS upgrade rollout.
 
 ```mermaid
 graph LR
-    subgraph Source Account
-        A[EKS Cluster v1] --> B[Service Mesh]
+    subgraph AWS Environment
+        A[EKS Cluster v1.x] -->|Upgrade| B[EKS Cluster v1.32]
+        B --> C[Karpenter v1]
+        B --> D[100+ Services]
     end
-    subgraph Target Account
-        C[EKS Cluster v2] --> D[Service Mesh]
+    subgraph Networking
+        E[VPC Peering] --> F[VPN Access]
     end
-    B <-->|Cross-Account VPC Peering| D
-    E[Route 53] -->|Weighted Routing| A
-    E -->|Weighted Routing| C
-    style A fill:#8b5cf6,color:#fff
+    subgraph CI/CD
+        G[GitLab Pipelines] --> H[Terraform Plan]
+        H --> I[Terraform Apply]
+    end
+    I --> B
+    F --> B
+    style B fill:#8b5cf6,color:#fff
     style C fill:#8b5cf6,color:#fff
 ```
 
-The migration itself used a blue-green pattern at the service level. Each service was deployed to the new cluster, validated through automated smoke tests, and then traffic was gradually shifted using weighted routing in the mesh. I built a custom migration controller that automated the sequence: deploy, validate, shift traffic, monitor, and either promote or rollback. Rollback was automatic if error rates exceeded thresholds during the traffic shift window.
+Each upgrade was planned carefully with multiple dry runs to verify correctness before touching production. VPC peering provided VPN connectivity for engineer access during the process. GitLab CI/CD pipelines ran Terraform plan and apply stages, and I tested each change against a fresh environment to confirm the Terraform was complete and valid, effectively a disaster recovery validation at the same time.
+
+The Karpenter v1 migration was the hardest part. The upgrade introduced breaking changes to node pool configuration and provisioner behavior. After each upgrade, there were leftover Karpenter nodes from previous versions that wouldn't drain cleanly and required manual cleanup. That was where most of the hands-on intervention happened.
+
+I was the sole person involved in planning, executing, and validating every rollout.
 
 ## Results
 
-All 100+ services were migrated over a four-week period with zero minutes of customer-facing downtime. The automated migration controller handled 85% of services without manual intervention. The new clusters run current Kubernetes versions with standardized configurations managed through GitOps, reducing operational toil and improving the team's ability to apply security patches and upgrades going forward.
+All 100+ services were upgraded over a four-week period with zero minutes of customer-facing downtime. The bulk of the process was automated through Terraform and GitLab CI/CD pipelines, though Karpenter node cleanup and certain edge cases required manual intervention. The upgraded clusters now run EKS 1.32 with Karpenter v1, avoiding extended support charges and leaving the infrastructure in a clean state, whether for continued use or the eventual Duplo Cloud migration.
+
+Disaster recovery was validated as a side effect of the process: because I tested every Terraform plan in a clean environment, we confirmed that our infrastructure could be fully recreated from code.
