@@ -25,7 +25,7 @@ const {
     Build Time Comparison
   </h4>
   <div class="chart-container" style="width: 100%; min-height: 200px;">
-    <svg class="w-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Bar chart comparing build times: ${beforeLabel} at ${beforeMinutes} minutes versus ${afterLabel} at ${afterMinutes} minutes`}>
+    <svg class="w-full h-auto" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Bar chart comparing build times: ${beforeLabel} at ${beforeMinutes} minutes versus ${afterLabel} at ${afterMinutes} minutes`}>
       <desc>A bar chart showing build time reduction from {beforeMinutes} minutes ({beforeLabel}) to {afterMinutes} minutes ({afterLabel}), a {Math.round((1 - afterMinutes / beforeMinutes) * 100)}% improvement.</desc>
     </svg>
   </div>

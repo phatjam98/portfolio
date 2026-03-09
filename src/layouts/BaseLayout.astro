@@ -11,7 +11,7 @@ interface Props {
 
 const {
   title,
-  description = 'Travis Carter - Senior Software Engineer & Architect',
+  description = 'Travis Carter - Software Architect',
   image = '/og-image.png',
   url = Astro.url.href,
   type = 'website',
@@ -56,7 +56,7 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Travis Carter",
-      "jobTitle": "Senior Software Engineer & Architect",
+      "jobTitle": "Software Architect",
       "url": "https://phatjam98.com",
       "sameAs": ["https://github.com/phatjam98", "https://www.linkedin.com/in/travis-carter/"]
     })} />
