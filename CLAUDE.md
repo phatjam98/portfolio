@@ -1,30 +1,28 @@
 # Portfolio - phatjam98.com
 
 ## Overview
-Personal portfolio site for Travis Carter (Senior Software Engineer & Architect). Built with Astro 5, Tailwind CSS v4, MDX content collections, and deployed to Firebase Hosting.
+Personal portfolio site for Travis Carter (Software Architect). Built with Astro 5, Tailwind CSS v4, MDX content collections, and deployed to Firebase Hosting.
 
 ## Master Plan
-The full PRD and implementation plan is archived in the Claude Code session transcript:
+Full PRD archived in Claude Code session:
 `/Users/traviscarter/.claude/projects/-Users-traviscarter-src/5cf8bffe-426e-494e-9076-d27f54bc830e.jsonl`
 
-This contains the complete PRD with design decisions, color palette, typography, page specifications, content strategy, and the 4-phase implementation plan that was executed.
-
-## Current State (Post-Initial Build)
-All 4 phases of the initial plan have been executed:
+## Current State
+All 4 original build phases complete. A full launch readiness pass has also been completed:
 - **Phase 1**: Foundation (design system, layouts, theme toggle, nav, footer)
 - **Phase 2**: Pages & components (all routes, cards, listing/detail pages)
 - **Phase 3**: Content & interactivity (MDX case studies, Mermaid diagrams, D3 chart, scroll animations)
 - **Phase 4**: Polish & launch (SEO meta tags, JSON-LD, robots.txt, favicon, 404 page, CI/CD workflow)
+- **Launch Readiness**: Real About page content (Civil Engineering -> ECFX career arc), case studies rewritten with real interview data, explorations section added, nav/footer links extracted to shared data file, OG image generated, a11y improvements, social links fixed
+
+Site has 12 pages. Writing articles are published.
 
 ### Known Follow-Ups
-1. **GitHub Actions workflow** - `.github/workflows/deploy.yml` exists locally but could not be pushed (OAuth token lacks `workflow` scope). Must be pushed manually or after re-auth.
-2. **Default branch on GitHub** - Currently `feature/initial-scaffold`; should be changed to `develop` or `main` in repo settings.
-3. **OG image** - `public/og-image.png` (1200x630) placeholder still needed.
-4. **Case study content** - All 4 case studies have placeholder prose. Real metrics/details needed for EventHorizon and EKS migrations.
-5. **About page copy** - Placeholder; needs Travis's actual career narrative.
-6. **Social links** - LinkedIn URL is `#` placeholder in Footer.
-7. **Devil's Advocate minor issues** - From Phase 1 review: nav links duplicated in Nav + Footer (extract to shared data file), missing `aria-controls` on hamburger, footer heading hierarchy (`h3` without `h2` ancestor), add `color: transparent` fallback for `.text-gradient`.
-8. **Firebase deployment** - `firebase.json` is configured but Firebase project needs to be initialized and connected.
+- [ ] **GitHub Actions** - `.github/workflows/deploy.yml` exists but needs Firebase project setup before it will run
+- [ ] **Firebase deployment** - `firebase.json` + `.firebaserc` configured; Firebase project needs initialization (`firebase init`)
+- [ ] **Default branch** - Should be changed to `main` in GitHub repo settings
+- [x] **Writing articles** - `protobuf-elasticsearch` and `copy-paste-to-context-engineering` rewritten with real interview data and published
+- [ ] **Custom domain** - `phatjam98.com` needs DNS + custom domain setup on Firebase Hosting
 
 ## Tech Stack
 - **Framework**: Astro 5 (static output)
@@ -48,6 +46,16 @@ All 4 phases of the initial plan have been executed:
 - Uses `glob()` from `astro/loaders` and `z` from `astro/zod`
 - Render with `import { render } from 'astro:content'` then `const { Content } = await render(entry)`
 - Dynamic routes: `getStaticPaths()` returns `{ params: { slug: entry.id }, props: { entry } }`
+- Writing articles use `status: "draft" | "published"` — only `published` entries appear in listings
+
+### Navigation Data
+- Nav and footer links are defined in `src/data/navigation.ts` (NOT duplicated in each component)
+- Import and use this single source of truth in Nav and Footer components
+
+### Content Conventions
+- No em dashes anywhere — use colons, commas, parentheses, or restructure the sentence
+- ECFX is anonymized as "law-tech startup" in all case study content
+- Contact email: `phatjam98@gmail.com`
 
 ### Theme System
 - Default: dark theme (`<html class="dark">`)
@@ -87,6 +95,7 @@ All 4 phases of the initial plan have been executed:
 npm run dev          # Start dev server
 npm run build        # Production build to dist/
 npm run preview      # Preview production build
+node scripts/generate-og-image.mjs  # Regenerate public/og-image.png
 ```
 
 ## Directory Structure
@@ -95,21 +104,25 @@ src/
   components/         # Astro components (Nav, Footer, ThemeToggle, cards, etc.)
     charts/           # D3.js chart components (BuildTimeChart)
   content/            # MDX content collections
-    case-studies/     # 4 case study MDX files
-    writing/          # 2 writing article MDX files
-  layouts/            # BaseLayout, PageLayout, CaseStudyLayout, ArticleLayout
-  pages/              # File-based routing (index, about, 404, case-studies/*, writing/*)
+    case-studies/     # 4 case study MDX files (real content, ECFX anonymized)
+    explorations/     # Short-form exploration posts
+    writing/          # 2 writing article MDX files (both draft)
+  data/               # Shared data (navigation.ts)
+  layouts/            # BaseLayout, PageLayout, CaseStudyLayout, ArticleLayout, ExplorationLayout
+  pages/              # File-based routing (index, about, 404, case-studies/*, explorations/*, writing/*)
   scripts/            # Client-side scripts (scroll-animations.ts)
   styles/             # global.css design system
   content.config.ts   # Content collection schemas
 public/
   fonts/              # Self-hosted WOFF2 fonts (Syne, Source Sans 3, JetBrains Mono)
   favicon.svg         # TC monogram favicon
+  og-image.png        # 1200x630 OG image (generated via Sharp script)
   robots.txt          # Search engine directives
+scripts/
+  generate-og-image.mjs  # Sharp-based OG image generator
 ```
 
 ## Git Workflow
 - Never commit to main directly
 - Feature branches -> develop -> main via PRs
 - Use `gh` CLI for GitHub operations
-- Current branches: `develop`, `feature/initial-scaffold` (both at same commit)

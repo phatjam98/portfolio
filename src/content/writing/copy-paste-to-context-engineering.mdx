@@ -1,0 +1,54 @@
+---
+title: "From Copy-Paste to Context Engineering"
+description: "How my development workflow evolved from chatbot-assisted debugging to building agent teams, skills, and TDD pipelines with Claude Code over the course of a year."
+tags: ["AI", "Claude Code", "Developer Workflow", "Context Engineering", "TDD"]
+publishDate: 2025-03-01
+status: "published"
+category: "engineering"
+---
+
+## A Year Ago
+
+In early 2025, I was deep in a complex upgrade: Micronaut 1 to 4, Gradle 7 to 8, Hibernate 5 to 6, and a cascade of dependency changes across a 32-project monolith. There were no tests of any kind. I was manually running, debugging, and refactoring large sections of the codebase by hand.
+
+I used ChatGPT and Claude as chatbots. Copy a stack trace, paste it in, read the suggestion, go back to my editor and try it. It helped at the margins, but the workflow was entirely manual. The AI was a search engine with better natural language understanding, nothing more.
+
+## The Weekend That Changed Everything
+
+By June 2025, "vibe coding" was everywhere. Agents writing code, shipping features, entire applications generated from prompts. I started worrying about the future of my career. So one weekend I installed Claude Code and started experimenting.
+
+The first few days were small: bug investigations, AWS infrastructure questions, things I would have Googled. Then about two weeks in, something clicked. I had developed some interesting workflows and a custom agent with multiple modules (this was before Claude announced Skills). My first real project was ambitious: use Claude Code to read my local PostgreSQL database schema and write a brand new, clean data library of Micronaut 4 Data entities.
+
+The original data library was buried inside the platform monolith. This was a clean rewrite into an independent library repository hosted in AWS CodeArtifact. It took three days at four to five hours a day. What came out the other end was the entire Postgres schema created as JPA entities, complete Micronaut integration tests using TestResources, and full documentation. All tested, all passing.
+
+I modified that same agent and pointed it at the next task: a new REST API service to replace one of the monolith applications. This service consumed the new data library and was written completely by Claude Code. Fully tested, fully documented. Two days.
+
+## The Evolution
+
+The pattern continued as I refined the approach. When Claude announced Skills, my multi-module agent became less useful. The fix was straightforward: I built a streamlined v2 agent and refactored the modules into Skills. The agent loads the skills it needs, but now other agents and the main session can use those same skills too. Much more flexible.
+
+I added hooks and commands to automate workflows and build protections into them. MCP integrations connected Claude Code to external services. Each piece made the next project faster and more reliable.
+
+## What the Workflow Looks Like Today
+
+Every repository has a `CLAUDE.md` at its root with project-specific instructions, conventions, and architectural context. A `docs/` directory holds TDD learnings, design documents, and investigation notes that persist across sessions. My global `~/.claude/CLAUDE.md` defines branching strategies, platform-specific rules (GitLab vs GitHub), and general instructions that apply everywhere.
+
+The most important principle I have learned: TDD is the key to successful agent workflows. It forces the agent to test its own work in real time. Failing tests provide specific, actionable context. Having that validation step in the development loop is invaluable. Without it, agents drift. With it, they self-correct.
+
+For any significant task, I start in Plan mode and almost never accept the first version of the plan. Something is usually not quite right in a step or two, or I have forgotten to provide context that changes the approach. The planning phase is where I catch those gaps before any code is written.
+
+At the end of all work, the agent creates a branch, commits, pushes, and opens a merge request or pull request for my review. I leave comments, request changes, and have the agent review the MR/PR comments, commit, and push updates for re-review. The same code review workflow I would use with a human engineer.
+
+## The Big Win
+
+The most impressive result so far has been the Micronaut 1 to 4 upgrade, the same upgrade I was struggling through manually a year ago. My team has adopted these workflows and we have created and closed over 50 Jira tickets in two weeks as we push toward permanent production deployment. Every class that gets a fix or refactor gets comprehensive Spock integration tests. The upgrade that felt impossible twelve months ago is now on the verge of shipping.
+
+## What I Have Learned
+
+Nothing about context engineering has truly surprised me, and I think that is because the fundamentals are things I have always believed in. Good documentation. Meaningful code comments. Comprehensive testing. These are the things most engineers hate doing and put off indefinitely. They are also the things that are fundamental to making AI-assisted development work. The engineers who have been disciplined about documentation and testing are the ones who will find this transition natural.
+
+Not everything worked. I tried a personas system that did not play out the way I wanted. I attempted some complex rebasing workflows and a migration to replace legacy S3 components with Micronaut Object Storage that proved too difficult with the context I provided. I am confident I could make those work now with more detailed upfront context, but at the time, doing it by hand was the only realistic option.
+
+## For the Skeptics
+
+When an engineer tells me they are skeptical about AI-assisted development, I tell them to sit with me for 30 minutes on one of their own tasks. Not a demo, not a toy project, their actual work. That is usually enough to shift the conversation from "will this replace me" to "how do I make this work for my workflow." These tools do not replace engineering skill. They amplify it. The engineers who understand their systems deeply are the ones who get the most out of them.

@@ -1,24 +1,38 @@
 ---
 title: "Protocol Buffers Meet Elasticsearch"
-description: "Building a type-safe ORM layer between Protocol Buffers and Elasticsearch using Micronaut."
-tags: ["Protobuf", "Elasticsearch", "Micronaut", "Java", "Open Source"]
+description: "How I eliminated an entire layer of data translation by building a library that treats Protobuf message definitions as the source of truth for Elasticsearch indices."
+tags: ["Protobuf", "Elasticsearch", "Micronaut", "Java"]
 publishDate: 2024-08-20
-status: "draft"
+status: "published"
 category: "engineering"
 ---
 
 ## The Problem
 
-Protocol Buffers provide a strongly-typed, language-neutral schema for data, while Elasticsearch offers powerful full-text search and analytics. However, bridging the two has traditionally required a significant amount of boilerplate: manually mapping Protobuf fields to Elasticsearch document fields, writing serialization logic, and hand-coding query builders. This boilerplate is tedious, error-prone, and becomes a maintenance burden as schemas evolve. Every time a `.proto` file changes, developers must remember to update the corresponding Elasticsearch mappings and serialization code.
+At Banjo, our entire platform was event-driven. Every service communicated through Kafka or gRPC, and every payload was a Protocol Buffer message. We started on Protobuf 2 and later migrated to Protobuf 3. Protobufs solved a real problem for us: with services written in Ruby, Java, Python, and TypeScript, having a single schema language for data objects across all four languages was a significant advantage.
 
-In projects where Protobuf is already the canonical data format, the lack of a type-safe integration layer between Protobuf and Elasticsearch forces teams to either duplicate schema definitions or accept runtime mapping errors that only surface during integration testing.
+The problem was Elasticsearch. Protobufs are strongly typed, but Elasticsearch has its own type system, its own JSON document format, and its own ideas about how data should be structured. Every time we needed to persist or query data, we had to write a translation layer: Protobuf to Java POJO, POJO to Elasticsearch JSON, Elasticsearch JSON back to POJO, POJO back to Protobuf. We were smart enough to consolidate data persistence and access as best we could, but that translation code was scattered across the platform. Nearly every usage had its own normalizer, its own mapping logic, its own set of assumptions about how types should convert.
 
-## The Approach
+There was no standardized way to handle it. Each service reinvented the wheel, and the bugs that came out of that inconsistency were constant.
 
-I built an open-source ORM-style library for Micronaut that treats Protobuf message definitions as the single source of truth for Elasticsearch document mappings. The library automatically generates Elasticsearch index mappings from `.proto` field types and annotations, handles serialization and deserialization between Protobuf messages and Elasticsearch documents, and provides a repository pattern inspired by Spring Data for common CRUD and query operations.
+## The Realization
 
-The design leverages Micronaut's compile-time dependency injection to avoid the reflection overhead typical of ORM frameworks. Custom annotations on Protobuf fields control indexing behavior, such as specifying analyzers for text fields or marking fields as keyword-only. The repository interfaces are resolved at compile time, catching type mismatches and configuration errors before the application starts rather than at runtime.
+The breaking point was not a bug or an incident. It was a realization: we could virtually eliminate Java POJOs from the equation by building services directly around the Protobuf entity itself.
 
-## Results
+Protobufs have interesting constraints that most developers treat as limitations. They are immutable. There is no concept of null values. Field numbers are permanent. These constraints are actually features when you are designing a data persistence layer. If the Protobuf schema is already the canonical definition of your data, why maintain a parallel set of Java classes that say the same thing?
 
-The library eliminates the boilerplate of manually managing Protobuf-to-Elasticsearch mappings, reducing the integration code for a typical service by roughly 70%. Schema changes propagate automatically from `.proto` definitions through to Elasticsearch mappings, removing an entire class of drift-related bugs. The library is published to Maven Central as open source and is used across multiple internal services where Protobuf and Elasticsearch are part of the data pipeline.
+I saw a path to doing three things at once. First, remove an entire layer of data translation by letting services work with Protobuf objects directly. Second, build an Elasticsearch adapter that reads the Protobuf schema and automatically creates structured Elasticsearch indices, no manual mapping required. Third, build a translator that converts Elasticsearch JSON responses back into Protobuf objects. The two technologies have enough structure in their type systems that, with the right adapter, they work together almost seamlessly.
+
+## The Design
+
+The library I built for Micronaut treats the `.proto` file as the single source of truth. When a service starts, the library inspects the Protobuf message definitions and generates the corresponding Elasticsearch index mappings. Custom annotations on Protobuf fields control indexing behavior: specifying analyzers for text fields, marking fields as keyword-only, configuring nested object mappings.
+
+Micronaut's compile-time dependency injection was critical to making this work without the reflection overhead that plagues most ORM-style frameworks. Repository interfaces are resolved at compile time, so type mismatches and configuration errors surface before the application starts, not during a production query.
+
+The trickiest part was index migration. Protobufs are designed to evolve forward. Best practice is to keep them backwards compatible, which means not moving field names and numbers around or changing field types. The library handles the common evolution cases: new fields appearing on a Protobuf entity, backwards-compatible type changes, updates to index settings. When a Protobuf schema changes, the corresponding Elasticsearch index migrates to match.
+
+## Where It Stands
+
+I use this library in several of my own services. The workflow is straightforward: define a Protobuf, get a well-structured Elasticsearch index automatically, pair it with a gRPC service definition and you have a stubbed API ready to implement. No POJOs, no manual mapping code, no normalizers.
+
+The library is not yet published as open source. That is coming, and when it ships I will update this article with the repository link and usage documentation.
