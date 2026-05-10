@@ -164,8 +164,8 @@ const {
       observer.observe(chart);
     });
 
-    // Re-render on theme change
-    window.addEventListener('theme-change', () => {
+    // Re-render on Blueprint accent palette change
+    window.addEventListener('bp-theme-change', () => {
       charts.forEach(renderChart);
     });
   }
