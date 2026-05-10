@@ -1,220 +1,217 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+import CareerGantt from '../components/CareerGantt.astro';
+
+const careerRoles = [
+  { co: 'ECFX', role: 'Sr. Software Engineer', from: 2023, to: 'Now' as const, color: '#22d3ee' },
+  { co: 'PHC', role: 'Director, Platform Engineering', from: 2021, to: 2024, color: '#06b6d4' },
+  { co: 'Globality', role: 'Sr. Software Engineer', from: 2020, to: 2021, color: '#8b5cf6' },
+  { co: 'Banjo', role: 'Sr. Software Engineer', from: 2014, to: 2020, color: '#f59e0b' },
+  { co: 'Frontend Dev', role: 'JS / SPA work', from: 2011, to: 2014, color: '#a3a3a3' },
+  { co: 'Civil Eng', role: 'Draftsman / Designer', from: 1998, to: 2009, color: '#737373' },
+];
+
+const specSheet: Array<[string, string]> = [
+  ['LOCATION', 'Salt Lake City, UT'],
+  ['AVAILABLE', 'Q3 2026'],
+  ['TIMEZONE', 'GMT−7 (MDT)'],
+  ['FOCUS', 'Distributed systems, agent orchestration'],
+  ['SHIPPING', 'EventHorizon · AgentFlow'],
+  ['CONTACT', 'phatjam98@gmail.com'],
+];
+
+const stackMatrix: Array<[string, string[]]> = [
+  ['Languages', ['Java', 'Kotlin', 'TypeScript', 'Python']],
+  ['Streaming', ['Apache Flink', 'Apache Kafka', 'Protobuf', 'Elasticsearch']],
+  ['Frameworks', ['Micronaut', 'Spring Boot', 'Astro', 'React']],
+  ['Infra', ['AWS', 'EKS', 'Terraform', 'Docker']],
+  ['Practices', ['DDD', 'Event Sourcing', 'TDD', 'Context Engineering']],
+];
+
+interface CareerNarrative {
+  co: string;
+  role: string;
+  dates: string;
+  body: string;
+}
+
+const careerNarratives: CareerNarrative[] = [
+  {
+    co: 'ECFX',
+    role: 'Sr. Software Engineer',
+    dates: 'Oct 2023 — Present',
+    body: 'Full-stack engineer and platform architect at a law-tech startup. Sole owner of DevOps and infrastructure. Refactored CI/CD pipelines to cut build times from 45 minutes to under 10 with selective build and deploy. Led a Micronaut 4 and Hibernate 6 upgrade across a six-year-old codebase with no existing test coverage, using Claude Code workflows and a TDD-first approach that closed over 50 Jira tickets in two weeks. Presented AI-augmented development methodology to engineering leadership, and have been writing publicly about context engineering and agent-driven development.',
+  },
+  {
+    co: 'PHC',
+    role: 'Director of Platform Engineering',
+    dates: 'Oct 2021 — Mar 2024',
+    body: 'Led platform engineering at a health-tech Series A startup. Owned architecture, system design, and the development roadmap. Built a real-time risk anomaly detection and notification platform from scratch using Flink, Elasticsearch, Protobufs, and Micronaut. Created a custom Flink StateFun mixed-language framework supporting processors in both Java and Python.',
+  },
+  {
+    co: 'Globality',
+    role: 'Sr. Software Engineer',
+    dates: 'Oct 2020 — Oct 2021',
+    body: 'Implemented Kubernetes cluster architecture and deployed vCluster (Loft) to give the engineering team sandboxed development environments, improving developer workflow across a 20-person engineering org.',
+  },
+  {
+    co: 'Banjo',
+    role: 'Sr. Software Engineer',
+    dates: 'Aug 2014 — Aug 2020',
+    body: 'Six formative years at a fast-paced startup building real-time event processing and anomaly detection systems. Built an automation API that cut discovery-to-notification times from 7 minutes to under 30 seconds. Created an inter-agency coordination framework used by law enforcement, fire, and safety agencies. Worked across the full stack in an environment where everyone shared knowledge and owned everything. This is where my conviction around event-driven architecture was built, in production, under pressure, at scale.',
+  },
+  {
+    co: 'Frontend Developer',
+    role: 'JS / SPA Work',
+    dates: 'Nov 2011 — Aug 2014',
+    body: 'Early software career building JavaScript SPAs and UX. Rewrote an ASP.NET site into a true single-page application using Knockout.js and Durandal.js.',
+  },
+  {
+    co: 'Civil Engineering',
+    role: 'Draftsman & Project Designer',
+    dates: '1998 — 2009',
+    body: 'Over a decade of plan creation, project design, and engineering approvals. Drafted plans for Big Horn Golf Course in Palm Springs, designed the Blue Diamond shopping complex in Las Vegas, and trained engineers in Dubai on Autodesk Civil 3D for the Palm Islands project. Self-taught AutoCAD before graduating high school. When the 2008 recession hit, I taught myself to code and pivoted to software.',
+  },
+];
 ---
 
-<PageLayout title="About | Travis Carter" description="Software Architect focused on distributed systems, event-driven architectures, and developer platforms.">
-  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <h1 class="mb-6">About</h1>
+<PageLayout
+  title="About | Travis Carter"
+  description="Software Architect focused on distributed systems, event-driven architectures, and developer platforms."
+>
+  <!-- Hero -->
+  <section class="bp-about-hero">
+    <div class="bp-mono bp-about-eyebrow">SHEET 02 — BIOGRAPHY</div>
+    <h1 class="bp-syne bp-about-headline">
+      Two careers,<br />
+      <span class="accent">one instinct.</span>
+    </h1>
 
-    <!-- Intro -->
-    <div data-animate="fade" class="flex flex-col sm:flex-row gap-8 items-start mb-8">
-      <div>
-        <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-3xl mb-4">
-          I'm Travis Carter, a Software Architect and Senior Engineer who built two
-          careers the same way: by learning on the job and refusing to stop. I spent a decade
-          in civil engineering before teaching myself to code during the Great Recession, and I have
-          been building distributed systems, streaming platforms, and cloud infrastructure ever since.
+    <div class="bp-about-intro">
+      <div class="bp-prose bp-about-intro-text">
+        <p>
+          I'm Travis Carter, a Software Architect who learned the same thing
+          twice: <span class="accent">understand what the structure has to
+          carry before you draw the details.</span>
         </p>
-        <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
-          What civil engineering gave me that most software engineers never get is an instinct for
-          load-bearing design. Before you choose materials, before you draw the details, you understand
-          what the structure has to carry. That thinking has shaped everything I have built in software:
-          systems designed around their failure modes, architectures where the root cause is obvious at
-          3 AM, clear boundaries that hold up when the load changes.
+        <p>
+          I spent a decade in civil engineering, drafting plans for golf
+          courses, shopping complexes, and the Palm Islands in Dubai. When the
+          2008 recession ended that career, I taught myself to code and built
+          another one.
+        </p>
+        <p>
+          What civil engineering gave me is an instinct for load-bearing
+          design. That has shaped everything since: systems built around their
+          failure modes, architectures where the root cause is obvious at 3 AM,
+          clear boundaries that hold up when the load changes.
         </p>
       </div>
-    </div>
 
-    <!-- Impact Metrics -->
-    <div data-animate="slide-up" class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
-      <div class="glass-panel rounded-lg p-5 text-center">
-        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">83%</p>
-        <p class="text-sm text-[var(--color-text-muted)] mt-1">Build time reduction</p>
+      <aside class="bp-about-spec">
+        <div class="bp-mono bp-about-spec-label">SPEC SHEET</div>
+        <dl>
+          {specSheet.map(([k, v]) => (
+            <div class="bp-about-spec-row">
+              <dt class="bp-mono">{k}</dt>
+              <dd>{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Career Gantt -->
+  <section class="bp-section bp-section-bordered">
+    <div class="bp-mono bp-section-tag bp-section-tag-solo">§ CAREER LOAD PATH</div>
+    <CareerGantt roles={careerRoles} />
+  </section>
+
+  <!-- Career narratives -->
+  <section class="bp-section">
+    <div class="bp-mono bp-section-tag bp-section-tag-solo">§ DETAILED HISTORY</div>
+    <div class="bp-career-narratives">
+      {careerNarratives.map((c) => (
+        <article class="bp-career-narrative">
+          <header>
+            <h3 class="bp-syne">{c.co}</h3>
+            <div class="bp-mono bp-career-narrative-meta">
+              <span>{c.role.toUpperCase()}</span>
+              <span>{c.dates}</span>
+            </div>
+          </header>
+          <p>{c.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Stack matrix -->
+  <section class="bp-section bp-section-bordered">
+    <div class="bp-mono bp-section-tag bp-section-tag-solo">§ MATERIAL SPEC</div>
+    <div class="bp-stack-matrix">
+      {stackMatrix.map(([category, items]) => (
+        <div class="bp-stack-col">
+          <div class="bp-mono bp-stack-col-label">{category.toUpperCase()}</div>
+          <ul>
+            {items.map((item) => (
+              <li class="bp-stack-chip">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Philosophy + Open Source -->
+  <section class="bp-section">
+    <div class="bp-about-prose-grid">
+      <div class="bp-prose">
+        <h2>Philosophy</h2>
+        <p>
+          I believe the best engineering comes from deeply understanding what a
+          system has to carry before deciding how to build it. I value
+          simplicity, clear boundaries, and architectures that are easy to
+          reason about. When something breaks at 3 AM, the design should make
+          the root cause obvious.
+        </p>
+        <p>
+          That same instinct applies to how I think about AI-assisted
+          development. The engineers who get the most out of these tools are
+          the ones who already had discipline: good documentation, meaningful
+          tests, clear architectural context. The tools amplify the foundation
+          you give them. If the foundation is weak, they amplify that too.
+        </p>
+        <p>
+          I have spent a long time believing that doing the work right was
+          worth the investment even when it was slower. The past year has
+          confirmed it. Doing the work right is now the thing that scales.
+        </p>
       </div>
-      <div class="glass-panel rounded-lg p-5 text-center">
-        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">100+</p>
-        <p class="text-sm text-[var(--color-text-muted)] mt-1">Services migrated, zero downtime</p>
+
+      <div class="bp-prose">
+        <h2>What I'm Building</h2>
+        <p>
+          I am particularly drawn to problems at the boundaries between
+          systems: event-driven architectures, streaming pipelines, and the
+          tooling that makes engineering teams productive.
+        </p>
+        <p>
+          That includes the boundary I have been working at most actively over
+          the past year, between human architectural judgment and AI-driven
+          execution. I am building toward a startup in this space:
+          <strong>EventHorizon</strong> and <strong>AgentFlow</strong>, a
+          context-driven agent orchestration engine that has its roots in
+          years of work on event-driven platform design.
+        </p>
+        <p>
+          I also maintain several open-source libraries on Maven Central:
+          tools for Protocol Buffer testing, Elasticsearch integrations, and
+          Micronaut extensions. Reusable abstractions that help other
+          developers move faster without solving the same problems twice.
+        </p>
       </div>
-      <div class="glass-panel rounded-lg p-5 text-center">
-        <p class="text-2xl font-bold font-[var(--font-heading)] text-[var(--color-accent)]">4+</p>
-        <p class="text-sm text-[var(--color-text-muted)] mt-1">Industries, one streaming engine</p>
-      </div>
-    </div>
-
-    <!-- Career Journey -->
-    <div data-animate="slide-up" class="mt-16">
-      <h2 class="mb-2">Career Journey</h2>
-      <div class="space-y-6">
-        <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-accent)]">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Sr. Software Engineer - ECFX</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">Oct 2023 &ndash; Present</span>
-          </div>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Full-stack engineer and platform architect at a law-tech startup. Sole owner of DevOps and infrastructure.
-            Refactored CI/CD pipelines to cut build times from 45 minutes to under 10 with selective build and deploy.
-            Led a Micronaut 4 and Hibernate 6 upgrade across a six-year-old codebase with no existing test coverage,
-            using Claude Code workflows and a TDD-first approach that closed over 50 Jira tickets in two weeks.
-            Presented AI-augmented development methodology to engineering leadership, and have been writing publicly
-            about context engineering and agent-driven development.
-          </p>
-        </div>
-        <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-architecture)]">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Director of Platform Engineering - PHC</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">Oct 2021 &ndash; Mar 2024</span>
-          </div>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Led platform engineering at a health-tech Series A startup. Owned architecture,
-            system design, and the development roadmap. Built a real-time risk anomaly detection and notification
-            platform from scratch using Flink, Elasticsearch, Protobufs, and Micronaut. Created a custom Flink
-            StateFun mixed-language framework supporting processors in both Java and Python.
-          </p>
-        </div>
-        <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-infrastructure)]">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Sr. Software Engineer - Globality</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">Oct 2020 &ndash; Oct 2021</span>
-          </div>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Implemented Kubernetes cluster architecture and deployed vCluster (Loft) to give the engineering team
-            sandboxed development environments, improving developer workflow across a 20-person engineering org.
-          </p>
-        </div>
-        <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-accent)]">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Sr. Software Engineer - Banjo</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">Aug 2014 &ndash; Aug 2020</span>
-          </div>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Six formative years at a fast-paced startup building real-time event processing and anomaly detection
-            systems. Built an automation API that cut discovery-to-notification times from 7 minutes to under
-            30 seconds. Created an inter-agency coordination framework used by law enforcement, fire, and safety
-            agencies. Worked across the full stack in an environment where everyone shared knowledge and owned
-            everything. This is where my conviction around event-driven architecture was built, in production,
-            under pressure, at scale.
-          </p>
-        </div>
-        <div data-animate="slide-up" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-architecture)]">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Frontend Developer</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">Nov 2011 &ndash; Aug 2014</span>
-          </div>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Early software career building JavaScript SPAs and UX. Rewrote an ASP.NET site into a true
-            single-page application using Knockout.js and Durandal.js.
-          </p>
-        </div>
-        <div data-animate="slide-up" class="glass-panel rounded-lg p-5 border-l-4 border-[var(--color-cat-infrastructure)]">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Civil Engineering Draftsman and Project Designer</h3>
-            <span class="text-sm text-[var(--color-text-muted)]">1998 &ndash; 2009</span>
-          </div>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Over a decade of plan creation, project design, and engineering approvals.
-            Drafted plans for Big Horn Golf Course in Palm Springs, designed the Blue Diamond shopping complex
-            in Las Vegas, and trained engineers in Dubai on Autodesk Civil 3D for the Palm Islands project.
-            Self-taught AutoCAD before graduating high school. When the 2008 recession hit, I taught myself
-            to code and pivoted to software.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- What I Do -->
-    <div data-animate="slide-up" class="prose mt-16">
-      <h2>What I Do</h2>
-      <p>
-        Most senior engineers have spent their career in one layer of the stack. I have spent meaningful
-        time in all of them: platform, frontend, data, DevOps, infrastructure. My work spans
-        the full lifecycle of complex systems, from architecture and design through deployment and
-        optimization.
-      </p>
-      <p>
-        I am particularly drawn to problems at the boundaries between systems: event-driven architectures,
-        streaming pipelines, and the tooling that makes engineering teams productive. That includes the
-        boundary I have been working at most actively over the past year, between human architectural
-        judgment and AI-driven execution. I have built agent workflows, written about context engineering,
-        and put these approaches into production with real results. I am building toward a startup in this
-        space, EventHorizon and AgentFlow, a context-driven agent orchestration engine that has its roots
-        in years of work on event-driven platform design.
-      </p>
-    </div>
-
-    <!-- Technical Expertise -->
-    <div data-animate="slide-up" class="mt-16">
-      <h2 class="mb-6">Technical Expertise</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div data-animate="slide-up" data-animate-delay="1" class="glass-panel rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Languages & Frameworks</h3>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Java, Kotlin, TypeScript, Python. Micronaut, Spring Boot, Astro, React.
-          </p>
-        </div>
-        <div data-animate="slide-up" data-animate-delay="2" class="glass-panel rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Data & Streaming</h3>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Apache Kafka, Apache Flink, Elasticsearch, PostgreSQL, Protocol Buffers.
-          </p>
-        </div>
-        <div data-animate="slide-up" data-animate-delay="3" class="glass-panel rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Infrastructure</h3>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            AWS, Kubernetes (EKS), Terraform, Docker, GitLab CI, GitHub Actions.
-          </p>
-        </div>
-        <div data-animate="slide-up" data-animate-delay="4" class="glass-panel rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-2">Practices</h3>
-          <p class="text-sm text-[var(--color-text-secondary)]">
-            Domain-Driven Design, Event Sourcing, TDD, Observability, Platform Engineering, Context Engineering, AI-Augmented Development.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Open Source -->
-    <div data-animate="slide-up" class="prose mt-16">
-      <h2>Open Source</h2>
-      <p>
-        I maintain several open-source libraries on Maven Central, including tools for
-        Protocol Buffer testing, Elasticsearch integrations, and Micronaut extensions.
-        I believe in building reusable, well-tested abstractions that help other developers
-        move faster without having to solve the same problems twice.
-      </p>
-    </div>
-
-    <!-- Philosophy -->
-    <div data-animate="slide-up" class="prose mt-16">
-      <h2>Philosophy</h2>
-      <p>
-        I believe the best engineering comes from deeply understanding what a system has to carry
-        before deciding how to build it. I value simplicity, clear boundaries, and architectures
-        that are easy to reason about. When something breaks at 3 AM, the design should make the
-        root cause obvious.
-      </p>
-      <p>
-        That same instinct applies to how I think about AI-assisted development. The engineers who
-        get the most out of these tools are the ones who already had discipline: good documentation,
-        meaningful tests, clear architectural context. The tools amplify the foundation you give them.
-        If the foundation is weak, they amplify that too.
-      </p>
-      <p>
-        I have spent a long time believing that doing the work right was worth the investment even
-        when it was slower. The past year has confirmed it. Doing the work right is now the thing
-        that scales.
-      </p>
-    </div>
-
-    <!-- Get in Touch -->
-    <div data-animate="fade" class="prose mt-16">
-      <h2>Get in Touch</h2>
-      <p>
-        I am always open to discussing distributed systems challenges, platform engineering,
-        agent orchestration, and interesting technical problems. Reach out via
-        <a href="mailto:phatjam98@gmail.com">email</a>,
-        connect on <a href="https://www.linkedin.com/in/travis-carter/" target="_blank" rel="noopener noreferrer">LinkedIn</a>,
-        or check out my work on <a href="https://github.com/phatjam98" target="_blank" rel="noopener noreferrer">GitHub</a>.
-      </p>
     </div>
   </section>
 </PageLayout>
