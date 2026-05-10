@@ -24,13 +24,14 @@ const caseStudies = (await getCollection('case-studies'))
           <div data-animate="slide-up" data-animate-delay={String(Math.min(i + 1, 4))}>
             <CaseStudyCard
               slug={study.id}
+              n={String(i + 1).padStart(2, '0')}
               title={study.data.title}
-              subtitle={study.data.subtitle}
               description={study.data.description}
               category={study.data.category}
               tags={study.data.tags}
               heroMetric={study.data.heroMetric}
               heroMetricLabel={study.data.heroMetricLabel}
+              variant={i}
             />
           </div>
         ))}
