@@ -58,20 +58,6 @@
   --color-cat-vision: #f59e0b;
 }
 
-/* ── Light Theme Overrides ── */
-html.light {
-  --color-bg: #fafafa;
-  --color-bg-elevated: #ffffff;
-  --color-bg-surface: #f0f0f5;
-  --color-accent: #0088a0;
-  --color-accent-dim: #006b80;
-  --color-text-primary: #1a1a2e;
-  --color-text-secondary: #55556a;
-  --color-text-muted: #6e6e85;
-  --color-border: #e0e0e8;
-  --color-accent-glow: rgba(0, 136, 160, 0.08);
-}
-
 /* ── Base Layer ── */
 @layer base {
   html {
