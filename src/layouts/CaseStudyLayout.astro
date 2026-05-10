@@ -1,13 +1,12 @@
 ---
 import PageLayout from './PageLayout.astro';
-import CategoryBadge from '../components/CategoryBadge.astro';
-import HeroMetric from '../components/HeroMetric.astro';
+import { getCategory, type CategoryId } from '../data/categories';
 
 interface Props {
   title: string;
   subtitle: string;
   description: string;
-  category: 'optimization' | 'architecture' | 'infrastructure' | 'vision';
+  category: CategoryId;
   tags: string[];
   heroMetric?: string;
   heroMetricLabel?: string;
@@ -18,68 +17,160 @@ interface Props {
   duration?: string;
 }
 
-const { title, subtitle, description, category, tags, heroMetric, heroMetricLabel, publishDate, role, company, teamSize, duration } = Astro.props;
+const {
+  title,
+  subtitle,
+  description,
+  category,
+  tags,
+  heroMetric,
+  heroMetricLabel,
+  publishDate,
+  role,
+  company,
+  teamSize,
+  duration,
+} = Astro.props;
 
+const cat = getCategory(category);
 const metaItems = [role, company, teamSize, duration].filter(Boolean);
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 const imageURL = new URL('/og-image.png', Astro.site ?? Astro.url.origin).href;
 
 const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": title,
-  "description": description,
-  "url": canonicalURL,
-  "image": imageURL,
-  "author": {
-    "@type": "Person",
-    "name": "Travis Carter"
-  },
-  ...(publishDate && { "datePublished": publishDate.toISOString() }),
-  ...(publishDate && { "dateModified": publishDate.toISOString() }),
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  url: canonicalURL,
+  image: imageURL,
+  author: { '@type': 'Person', name: 'Travis Carter' },
+  ...(publishDate && { datePublished: publishDate.toISOString() }),
+  ...(publishDate && { dateModified: publishDate.toISOString() }),
 };
 ---
 
 <PageLayout title={`${title} | Travis Carter`} description={description} type="article">
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
-  <!-- Hero Section -->
-  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-4xl">
-      <div class="flex items-center gap-4 mb-6">
-        <CategoryBadge category={category} />
-      </div>
+  <bp-scroll-progress class="bp-scroll-progress"></bp-scroll-progress>
 
-      <h1 class="mb-3">{title}</h1>
-      <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] mb-6">{subtitle}</p>
-
-      {metaItems.length > 0 && (
-        <p class="text-sm text-[var(--color-text-muted)] mb-6">
-          {metaItems.join(' · ')}
-        </p>
-      )}
-
-      {heroMetric && heroMetricLabel && (
-        <div class="mb-8 p-6 glass-panel rounded-xl inline-block">
-          <HeroMetric metric={heroMetric} label={heroMetricLabel} />
-        </div>
-      )}
-
-      <div class="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span class="text-xs px-2 py-1 rounded-md bg-[var(--color-bg-surface)] text-[var(--color-text-muted)]">
-            {tag}
-          </span>
-        ))}
-      </div>
+  <!-- Hero -->
+  <section class="bp-cs-detail-hero">
+    <div class="bp-mono bp-cs-detail-eyebrow">
+      <span class="rule" aria-hidden="true"></span>
+      SHEET {String(category).toUpperCase()} · CASE STUDY
     </div>
+    <h1 class="bp-syne bp-cs-detail-title">{title}</h1>
+    <p class="bp-cs-detail-subtitle">{subtitle}</p>
+
+    <div class="bp-cs-detail-meta-strip bp-mono">
+      <span
+        class="bp-cs-detail-cat"
+        style={`color:${cat.color}; border-color:${cat.color};`}
+      >
+        {cat.label.toUpperCase()}
+      </span>
+      {metaItems.map((item) => <span>{String(item).toUpperCase()}</span>)}
+      {publishDate && (
+        <time datetime={publishDate.toISOString()}>
+          {publishDate.toISOString().slice(0, 7).replace('-', '.')}
+        </time>
+      )}
+    </div>
+
+    {heroMetric && (
+      <div class="bp-cs-detail-metric">
+        <div class="bp-syne bp-num bp-cs-detail-metric-value">{heroMetric}</div>
+        {heroMetricLabel && (
+          <div class="bp-mono bp-cs-detail-metric-label">
+            {heroMetricLabel.toUpperCase()}
+          </div>
+        )}
+      </div>
+    )}
+
+    {tags.length > 0 && (
+      <ul class="bp-cs-detail-tags">
+        {tags.map((t) => <li class="bp-mono">{t}</li>)}
+      </ul>
+    )}
   </section>
 
-  <!-- Content -->
-  <section class="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto pb-16">
-    <div class="prose max-w-4xl mx-auto">
+  <!-- Content + sticky TOC -->
+  <section class="bp-cs-detail-body">
+    <aside class="bp-cs-toc" aria-label="Contents">
+      <div class="bp-mono bp-cs-toc-label">CONTENTS</div>
+      <ol class="bp-cs-toc-list" id="bp-cs-toc-list"></ol>
+    </aside>
+
+    <article class="bp-prose" id="bp-cs-article">
       <slot />
-    </div>
+    </article>
   </section>
 </PageLayout>
+
+<script>
+  // Auto-generate sticky TOC + active-section tracking
+  const article = document.getElementById('bp-cs-article');
+  const tocList = document.getElementById('bp-cs-toc-list');
+  if (article && tocList) {
+    const headings = Array.from(article.querySelectorAll<HTMLHeadingElement>('h2'));
+
+    const slugify = (text: string) =>
+      text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 60);
+
+    const items: Array<{ id: string; text: string; el: HTMLHeadingElement; link: HTMLAnchorElement }> = [];
+
+    headings.forEach((h, i) => {
+      if (!h.id) h.id = slugify(h.textContent || '') || `section-${i + 1}`;
+      const n = String(i + 1).padStart(2, '0');
+      const text = h.textContent || '';
+
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = `#${h.id}`;
+      link.className = 'bp-mono bp-cs-toc-link';
+      link.innerHTML = `<span class="num">${n}</span><span class="text">${text}</span>`;
+      li.appendChild(link);
+      tocList.appendChild(li);
+
+      items.push({ id: h.id, text, el: h, link });
+    });
+
+    if (items.length > 0 && 'IntersectionObserver' in window) {
+      const setActive = (id: string) => {
+        items.forEach((it) => {
+          const on = it.id === id;
+          it.link.classList.toggle('is-active', on);
+          if (on) it.link.setAttribute('aria-current', 'true');
+          else it.link.removeAttribute('aria-current');
+        });
+      };
+      setActive(items[0].id);
+
+      const visible = new Set<string>();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) visible.add(e.target.id);
+            else visible.delete(e.target.id);
+          });
+          for (const it of items) {
+            if (visible.has(it.id)) {
+              setActive(it.id);
+              return;
+            }
+          }
+        },
+        { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
+      );
+      items.forEach((it) => observer.observe(it.el));
+    }
+  }
+</script>
