@@ -1,49 +1,75 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import CaseStudyCard from '../components/CaseStudyCard.astro';
+import HeroDiagram from '../components/HeroDiagram.astro';
 import { getCollection } from 'astro:content';
 
 const caseStudies = (await getCollection('case-studies'))
   .filter((entry) => entry.data.status === 'published')
   .sort((a, b) => a.data.order - b.data.order);
+
+const callouts = [
+  { n: 'A', label: 'INGEST', style: 'left: 4%;' },
+  { n: 'B', label: 'PROCESS', style: 'left: 35%;' },
+  { n: 'C', label: 'DETECT', style: 'left: 62%;' },
+  { n: 'D', label: 'RESPOND', style: 'right: 4%;' },
+];
 ---
 
 <PageLayout title="Travis Carter | Software Architect" description="Portfolio of Travis Carter, a distributed systems engineer building event-driven architectures, real-time platforms, and developer tooling. Case studies in CI/CD optimization, EKS migrations, and streaming data engines.">
   <!-- Hero Section -->
-  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-3xl">
-      <p class="text-sm font-medium tracking-widest uppercase text-[var(--color-accent)] mb-4">
-        Software Architect
-      </p>
-      <h1 class="text-gradient mb-6">
-        Architecting distributed systems that scale.
-      </h1>
-      <p data-animate="fade" class="text-lg sm:text-xl text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mb-8">
-        I design and build event-driven architectures, real-time platforms, and developer tooling.
-        100+ services migrated with zero downtime. CI pipelines cut from 47 to under 8 minutes.
-      </p>
-      <div data-animate="fade" class="flex flex-wrap gap-4">
-        <a
-          href="/case-studies"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--color-accent)]
-                 text-[var(--color-bg)] font-semibold text-sm hover:bg-[var(--color-accent-dim)]
-                 transition-colors duration-200"
-        >
-          View Case Studies
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </a>
-        <a
-          href="/about"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-[var(--color-border)]
-                 text-[var(--color-text-secondary)] font-semibold text-sm
-                 hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-muted)]
-                 transition-colors duration-200"
-        >
-          About Me
-        </a>
+  <section class="bp-hero">
+    <aside class="bp-hero-margin bp-mono" aria-hidden="true">
+      <span>§01</span>
+      <span>§02</span>
+      <span>§03</span>
+      <span>§04</span>
+    </aside>
+
+    <div class="bp-hero-text">
+      <div class="bp-mono bp-hero-eyebrow">
+        <span class="rule" aria-hidden="true"></span>
+        SOFTWARE ARCHITECT · DRAWING NO. 0001
       </div>
+      <h1 class="bp-syne bp-hero-headline">
+        I architect <span class="accent">distributed systems</span> that hold up at <span class="bracket-3am">3&nbsp;AM</span>.
+      </h1>
+      <p class="bp-hero-lede">
+        Two careers, one instinct: design for the load before you draw the details.
+        I build event-driven architectures, real-time platforms, and the developer
+        tooling that holds them together.
+      </p>
+
+      <div class="bp-hero-ctas">
+        <a class="bp-cta" href="/case-studies">View Case Studies <span aria-hidden="true">→</span></a>
+        <a class="bp-cta-ghost" href="/about">About</a>
+      </div>
+
+      <div class="bp-mono bp-hero-status">
+        <span><span class="dot" aria-hidden="true">●</span> AVAILABLE Q3 '26</span>
+        <span>SLC, UTAH · GMT−7</span>
+        <span>OPEN TO STAFF / PRINCIPAL</span>
+      </div>
+    </div>
+
+    <div class="bp-hero-frame">
+      <span class="bp-corner-mark top-left" aria-hidden="true"></span>
+      <span class="bp-corner-mark top-right" aria-hidden="true"></span>
+      <span class="bp-corner-mark bottom-left" aria-hidden="true"></span>
+      <span class="bp-corner-mark bottom-right" aria-hidden="true"></span>
+
+      <div class="bp-hero-callouts bp-mono" aria-hidden="true">
+        {callouts.map((c) => (
+          <span class="callout" style={c.style}>
+            <span class="badge">{c.n}</span>
+            <span class="label">{c.label}</span>
+          </span>
+        ))}
+      </div>
+
+      <bp-crosshair class="bp-hero-crosshair">
+        <HeroDiagram motion="rich" />
+      </bp-crosshair>
     </div>
   </section>
 
