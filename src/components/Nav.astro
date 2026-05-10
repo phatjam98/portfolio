@@ -9,91 +9,72 @@ function isActive(href: string): boolean {
 }
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-[var(--color-border)]">
-  <nav aria-label="Main navigation" class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 items-center justify-between">
-      <!-- Logo -->
-      <a
-        href="/"
-        class="font-[var(--font-heading)] text-xl font-bold tracking-tight text-[var(--color-accent)] hover:text-[var(--color-accent-dim)] transition-colors duration-200"
+<header class="bp-nav">
+  <nav aria-label="Main navigation" class="bp-nav-inner">
+    <a href="/" class="bp-brand" aria-label="Travis Carter — Home">
+      <span class="bp-mark" aria-hidden="true">
+        <span></span><span></span>
+      </span>
+      <span class="bp-syne bp-brand-name">TRAVIS CARTER</span>
+      <span class="bp-mono bp-brand-tag">/ ARCHITECT</span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="bp-nav-links">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['bp-nav-link', 'bp-mono', { 'is-active': isActive(href) }]}
+            aria-current={isActive(href) ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Right cluster: live clock + palette switcher -->
+    <div class="bp-nav-cluster">
+      <bp-clock tz-offset="-7" class="bp-nav-clock"></bp-clock>
+      <bp-theme></bp-theme>
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Toggle navigation"
+        class="bp-mobile-trigger"
       >
-        TC
-      </a>
-
-      <!-- Desktop nav links -->
-      <div class="hidden lg:flex items-center gap-1">
-        {navLinks.map(({ href, label }) => (
-          <a
-            href={href}
-            class:list={[
-              'px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
-              isActive(href)
-                ? 'text-[var(--color-accent)] bg-[var(--color-accent-glow)]'
-                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface)]',
-            ]}
-            aria-current={isActive(href) ? 'page' : undefined}
-          >
-            {label}
-          </a>
-        ))}
-
-        <div class="ml-2 pl-2 border-l border-[var(--color-border)]">
-          <bp-theme></bp-theme>
-        </div>
-      </div>
-
-      <!-- Mobile controls -->
-      <div class="flex items-center gap-2 lg:hidden">
-        <bp-theme></bp-theme>
-        <button
-          id="mobile-menu-btn"
-          type="button"
-          aria-expanded="false"
-          aria-controls="mobile-menu"
-          aria-label="Toggle navigation"
-          class="flex items-center justify-center w-10 h-10 rounded-lg
-                 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]
-                 hover:bg-[var(--color-bg-surface)] transition-colors duration-200"
-        >
-          <!-- Hamburger icon -->
-          <svg id="menu-icon-open" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-          <!-- Close icon -->
-          <svg id="menu-icon-close" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile drawer -->
-    <div
-      id="mobile-menu"
-      class="hidden lg:hidden overflow-hidden transition-all duration-300 ease-in-out"
-      style="max-height: 0;"
-    >
-      <div class="pb-4 pt-2 space-y-1 border-t border-[var(--color-border)]">
-        {navLinks.map(({ href, label }) => (
-          <a
-            href={href}
-            class:list={[
-              'block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200',
-              isActive(href)
-                ? 'text-[var(--color-accent)] bg-[var(--color-accent-glow)]'
-                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface)]',
-            ]}
-            aria-current={isActive(href) ? 'page' : undefined}
-          >
-            {label}
-          </a>
-        ))}
-      </div>
+        <svg id="menu-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg id="menu-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile drawer -->
+  <div id="mobile-menu" class="bp-mobile-drawer" style="max-height: 0;">
+    <ul class="bp-mobile-links">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['bp-nav-link', 'bp-mono', { 'is-active': isActive(href) }]}
+            aria-current={isActive(href) ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
 </header>
 
 <script>
@@ -102,47 +83,28 @@ function isActive(href: string): boolean {
   const iconOpen = document.getElementById('menu-icon-open');
   const iconClose = document.getElementById('menu-icon-close');
 
-  btn?.addEventListener('click', () => {
-    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-    const newExpanded = !isExpanded;
-
-    btn.setAttribute('aria-expanded', String(newExpanded));
-
-    if (menu) {
-      if (newExpanded) {
-        menu.classList.remove('hidden');
-        // Trigger reflow then animate
-        requestAnimationFrame(() => {
-          menu.style.maxHeight = menu.scrollHeight + 'px';
-        });
-      } else {
-        menu.style.maxHeight = '0';
-        menu.addEventListener('transitionend', () => {
-          if (btn.getAttribute('aria-expanded') === 'false') {
-            menu.classList.add('hidden');
-          }
-        }, { once: true });
-      }
+  function setOpen(open: boolean) {
+    if (!btn || !menu) return;
+    btn.setAttribute('aria-expanded', String(open));
+    if (open) {
+      menu.style.maxHeight = menu.scrollHeight + 'px';
+    } else {
+      menu.style.maxHeight = '0';
     }
+    if (iconOpen && iconClose) {
+      iconOpen.style.display = open ? 'none' : '';
+      iconClose.style.display = open ? '' : 'none';
+    }
+  }
 
-    iconOpen?.classList.toggle('hidden', newExpanded);
-    iconClose?.classList.toggle('hidden', !newExpanded);
+  btn?.addEventListener('click', () => {
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    setOpen(!isOpen);
   });
 
-  // Close mobile menu on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
-      btn.setAttribute('aria-expanded', 'false');
-      if (menu) {
-        menu.style.maxHeight = '0';
-        menu.addEventListener('transitionend', () => {
-          if (btn.getAttribute('aria-expanded') === 'false') {
-            menu.classList.add('hidden');
-          }
-        }, { once: true });
-      }
-      iconOpen?.classList.remove('hidden');
-      iconClose?.classList.add('hidden');
+      setOpen(false);
       btn.focus();
     }
   });

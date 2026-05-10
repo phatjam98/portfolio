@@ -16,7 +16,7 @@ const { title, description, image, url, type } = Astro.props;
 
 <BaseLayout title={title} description={description} image={image} url={url} type={type}>
   <Nav />
-  <main id="main-content" class="pt-20 min-h-screen">
+  <main id="main-content" class="min-h-screen">
     <slot />
   </main>
   <Footer />
