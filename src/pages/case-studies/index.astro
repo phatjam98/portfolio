@@ -1,45 +1,116 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
-import CaseStudyCard from '../../components/CaseStudyCard.astro';
 import { getCollection } from 'astro:content';
+import { getCategory, categoryMap, type CategoryId } from '../../data/categories';
 
 const caseStudies = (await getCollection('case-studies'))
   .filter((entry) => entry.data.status === 'published')
   .sort((a, b) => a.data.order - b.data.order);
+
+const filters: Array<{ id: 'all' | CategoryId; label: string }> = [
+  { id: 'all', label: 'All' },
+  ...Object.values(categoryMap).map((c) => ({ id: c.id, label: c.label })),
+];
+
+const total = String(caseStudies.length).padStart(2, '0');
 ---
 
-<PageLayout title="Case Studies | Travis Carter" description="Deep dives into distributed systems, performance optimization, and cloud infrastructure projects.">
-  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-3xl mb-12">
-      <h1 class="mb-4">Case Studies</h1>
-      <p data-animate="fade" class="text-lg text-[var(--color-text-secondary)]">
-        Deep dives into real-world engineering challenges: the problem, the approach,
-        and what happened.
+<PageLayout
+  title="Case Studies | Travis Carter"
+  description="Deep dives into distributed systems, performance optimization, and cloud infrastructure projects."
+>
+  <section class="bp-section">
+    <header class="bp-cs-index-head">
+      <div class="bp-mono bp-section-tag">SHEET 03 — CASE STUDY INDEX</div>
+      <h1 class="bp-syne bp-cs-index-title">Selected Work</h1>
+      <p class="bp-cs-index-lede">
+        Deep dives into real-world engineering challenges: the problem, the
+        approach, and what happened.
       </p>
-    </div>
+    </header>
 
-    {caseStudies.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {caseStudies.map((study, i) => (
-          <div data-animate="slide-up" data-animate-delay={String(Math.min(i + 1, 4))}>
-            <CaseStudyCard
-              slug={study.id}
-              n={String(i + 1).padStart(2, '0')}
-              title={study.data.title}
-              description={study.data.description}
-              category={study.data.category}
-              tags={study.data.tags}
-              heroMetric={study.data.heroMetric}
-              heroMetricLabel={study.data.heroMetricLabel}
-              variant={i}
-            />
-          </div>
+    <div class="bp-cs-filter" role="group" aria-label="Filter case studies by category">
+      <div class="bp-cs-filter-buttons">
+        {filters.map((f, i) => (
+          <button
+            type="button"
+            class:list={['bp-mono', 'bp-cs-filter-btn', { 'is-active': i === 0 }]}
+            data-filter={f.id}
+            aria-pressed={i === 0}
+          >
+            {f.label}
+          </button>
         ))}
       </div>
-    ) : (
-      <p class="text-[var(--color-text-muted)] text-center py-12">
-        Case studies coming soon.
-      </p>
+      <div class="bp-mono bp-cs-filter-meta">
+        SORT: REVERSE CHRONOLOGICAL · {total} ENTRIES
+      </div>
+    </div>
+
+    <div class="bp-cs-rows">
+      {caseStudies.map((study, i) => {
+        const cat = getCategory(study.data.category);
+        const n = String(i + 1).padStart(2, '0');
+        return (
+          <a
+            href={`/case-studies/${study.id}`}
+            class="bp-row bp-cs-row"
+            data-category={study.data.category}
+          >
+            <div class="bp-mono bp-num bp-cs-row-n">{n}</div>
+            <span
+              class="bp-mono bp-cs-row-cat"
+              style={`color:${cat.color}; border-color:${cat.color};`}
+            >
+              {cat.label.toUpperCase()}
+            </span>
+            <div class="bp-cs-row-title">
+              <h3 class="bp-syne">{study.data.title}</h3>
+              <p>{study.data.subtitle}</p>
+            </div>
+            <ul class="bp-cs-row-tags">
+              {study.data.tags.slice(0, 4).map((t) => (
+                <li class="bp-mono">{t}</li>
+              ))}
+            </ul>
+            <div class="bp-cs-row-metric">
+              {study.data.heroMetric && (
+                <div class="bp-syne bp-num">{study.data.heroMetric}</div>
+              )}
+              {study.data.heroMetricLabel && (
+                <div class="bp-mono bp-cs-row-metric-label">
+                  {study.data.heroMetricLabel.toUpperCase()}
+                </div>
+              )}
+            </div>
+            <span class="bp-mono bp-cs-row-arrow" aria-hidden="true">→</span>
+          </a>
+        );
+      })}
+    </div>
+
+    {caseStudies.length === 0 && (
+      <p class="bp-cs-empty bp-mono">CASE STUDIES COMING SOON.</p>
     )}
   </section>
 </PageLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.bp-cs-filter-btn');
+  const rows = document.querySelectorAll<HTMLElement>('.bp-cs-row');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      buttons.forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      rows.forEach((row) => {
+        const matches = filter === 'all' || row.dataset.category === filter;
+        row.style.display = matches ? '' : 'none';
+      });
+    });
+  });
+</script>
