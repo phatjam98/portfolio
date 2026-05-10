@@ -1,5 +1,6 @@
 ---
 import PageLayout from './PageLayout.astro';
+import { getCategory } from '../data/categories';
 
 interface Props {
   title: string;
@@ -10,55 +11,61 @@ interface Props {
 }
 
 const { title, subtitle, description, tags, publishDate } = Astro.props;
+const visionCat = getCategory('vision');
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 const imageURL = new URL('/og-image.png', Astro.site ?? Astro.url.origin).href;
 
 const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": title,
-  "description": description,
-  "url": canonicalURL,
-  "image": imageURL,
-  "author": {
-    "@type": "Person",
-    "name": "Travis Carter"
-  },
-  ...(publishDate && { "datePublished": publishDate.toISOString() }),
-  ...(publishDate && { "dateModified": publishDate.toISOString() }),
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  url: canonicalURL,
+  image: imageURL,
+  author: { '@type': 'Person', name: 'Travis Carter' },
+  ...(publishDate && { datePublished: publishDate.toISOString() }),
+  ...(publishDate && { dateModified: publishDate.toISOString() }),
 };
 ---
 
 <PageLayout title={`${title} | Travis Carter`} description={description} type="article">
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
-  <!-- Hero Section -->
-  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-4xl">
-      <div class="flex items-center gap-4 mb-6">
-        <span class="text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[color-mix(in_srgb,var(--color-cat-vision)_15%,transparent)] text-[var(--color-cat-vision)]">
-          Exploration
+  <bp-scroll-progress class="bp-scroll-progress"></bp-scroll-progress>
+
+  <article class="bp-article">
+    <header class="bp-article-hero">
+      <div class="bp-mono bp-article-eyebrow">
+        <span class="rule" aria-hidden="true"></span>
+        EXPLORATION · IDEA IN PROGRESS
+      </div>
+      <h1 class="bp-syne bp-article-title">{title}</h1>
+      <p class="bp-article-lede">{subtitle}</p>
+
+      <div class="bp-cs-detail-meta-strip bp-mono">
+        <span
+          class="bp-cs-detail-cat"
+          style={`color:${visionCat.color}; border-color:${visionCat.color};`}
+        >
+          EXPLORATION
         </span>
+        {publishDate && (
+          <time datetime={publishDate.toISOString()}>
+            {publishDate.toISOString().slice(0, 7).replace('-', '.')}
+          </time>
+        )}
       </div>
 
-      <h1 class="mb-3">{title}</h1>
-      <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] mb-6">{subtitle}</p>
+      {tags.length > 0 && (
+        <ul class="bp-article-tags">
+          {tags.map((t) => <li class="bp-mono">{t}</li>)}
+        </ul>
+      )}
+    </header>
 
-      <div class="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span class="text-xs px-2 py-1 rounded-md bg-[var(--color-bg-surface)] text-[var(--color-text-muted)]">
-            {tag}
-          </span>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Content -->
-  <section class="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto pb-16">
-    <div class="prose max-w-4xl mx-auto">
+    <div class="bp-prose bp-article-body">
       <slot />
     </div>
-  </section>
+  </article>
 </PageLayout>

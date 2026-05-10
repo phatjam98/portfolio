@@ -22,7 +22,7 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
 ---
 
 <!doctype html>
-<html lang="en" class="dark" data-bp-theme="cyan">
+<html lang="en" data-bp-theme="cyan">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -61,16 +61,8 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
       "sameAs": ["https://github.com/phatjam98", "https://www.linkedin.com/in/travis-carter/"]
     })} />
 
-    <!-- FOUC prevention: apply saved theme before paint -->
-    <script is:inline>
-      (function () {
-        const theme = localStorage.getItem('theme');
-        if (theme === 'light' || theme === 'dark') {
-          document.documentElement.classList.remove('dark', 'light');
-          document.documentElement.classList.add(theme);
-        }
-      })();
-    </script>
+    <!-- Theme color for native chrome -->
+    <meta name="theme-color" content="#0a0e1a" />
 
     <!-- Font preloads -->
     <link rel="preload" href="/fonts/Syne-Variable.woff2" as="font" type="font/woff2" crossorigin />
@@ -79,13 +71,13 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
     <!-- JetBrains Mono loads on-demand via font-display: swap when code blocks are rendered -->
 
   </head>
-  <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)] font-[var(--font-body)]">
+  <body class="min-h-screen">
     <!-- Skip to content -->
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100]
-             focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[var(--color-accent)]
-             focus:text-[var(--color-bg)] focus:font-semibold focus:text-sm"
+             focus:px-4 focus:py-2 focus:bg-[var(--bp-accent)]
+             focus:text-[var(--bp-bg)] focus:font-semibold focus:text-sm"
     >
       Skip to content
     </a>
