@@ -1,43 +1,59 @@
 ---
-import CategoryBadge from './CategoryBadge.astro';
-import HeroMetric from './HeroMetric.astro';
+import { getCategory, type CategoryId } from '../data/categories';
 
 interface Props {
   slug: string;
+  n: string;
   title: string;
-  subtitle: string;
   description: string;
-  category: 'optimization' | 'architecture' | 'infrastructure' | 'vision';
+  category: CategoryId;
   tags: string[];
   heroMetric?: string;
   heroMetricLabel?: string;
+  variant?: number;
 }
 
-const { slug, title, subtitle, description, category, tags, heroMetric, heroMetricLabel } = Astro.props;
+const {
+  slug,
+  n,
+  title,
+  description,
+  category,
+  tags,
+  heroMetric,
+  heroMetricLabel,
+  variant = 0,
+} = Astro.props;
+
+const cat = getCategory(category);
+const traceVariant = ((variant % 3) + 3) % 3;
 ---
 
-<a
-  href={`/case-studies/${slug}`}
-  class="group block glass-panel rounded-xl p-6 card-hover"
->
-  <div class="flex items-start justify-between gap-4 mb-4">
-    <CategoryBadge category={category} />
-    {heroMetric && heroMetricLabel && (
-      <HeroMetric metric={heroMetric} label={heroMetricLabel} />
-    )}
+<a href={`/case-studies/${slug}`} class="bp-card bp-cs-card">
+  <bp-reveal-trace variant={String(traceVariant)}></bp-reveal-trace>
+
+  <div class="bp-cs-card-meta bp-mono">
+    <span>CS-{n}</span>
+    <span class="cat" style={`color:${cat.color}; border-color:${cat.color};`}>
+      {cat.label.toUpperCase()}
+    </span>
   </div>
 
-  <h3 class="text-xl font-semibold text-[var(--color-text-primary)] mb-1 group-hover:text-[var(--color-accent)] transition-colors duration-200">
-    {title}
-  </h3>
-  <p class="text-sm text-[var(--color-text-muted)] mb-3">{subtitle}</p>
-  <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">{description}</p>
+  {heroMetric && (
+    <>
+      <div class="bp-syne bp-num bp-cs-card-metric">{heroMetric}</div>
+      {heroMetricLabel && (
+        <div class="bp-mono bp-cs-card-metric-label">{heroMetricLabel.toUpperCase()}</div>
+      )}
+    </>
+  )}
 
-  <div class="flex flex-wrap gap-2">
-    {tags.slice(0, 4).map((tag) => (
-      <span class="text-xs px-2 py-1 rounded-md bg-[var(--color-bg-surface)] text-[var(--color-text-muted)]">
-        {tag}
-      </span>
+  <h3 class="bp-syne bp-cs-card-title">{title}</h3>
+  <p class="bp-cs-card-desc">{description}</p>
+
+  <ul class="bp-cs-card-tags">
+    {tags.slice(0, 3).map((t) => (
+      <li class="bp-mono">{t}</li>
     ))}
-  </div>
+  </ul>
 </a>
