@@ -15,13 +15,13 @@ const {
 ---
 
 <div
-  class="build-time-chart rounded-xl glass-panel p-6 my-8"
+  class="build-time-chart"
   data-before={beforeMinutes}
   data-after={afterMinutes}
   data-before-label={beforeLabel}
   data-after-label={afterLabel}
 >
-  <h4 class="text-sm font-semibold text-[var(--color-text-primary)] mb-4 font-[var(--font-heading)]">
+  <h4 class="bp-syne build-time-chart-title">
     Build Time Comparison
   </h4>
   <div class="chart-container" style="width: 100%; min-height: 200px;">
@@ -41,11 +41,11 @@ const {
   function getThemeColors() {
     const style = getComputedStyle(document.documentElement);
     return {
-      accent: style.getPropertyValue('--color-accent').trim() || '#00e5ff',
-      muted: style.getPropertyValue('--color-text-muted').trim() || '#55556a',
-      secondary: style.getPropertyValue('--color-text-secondary').trim() || '#8888a0',
-      surface: style.getPropertyValue('--color-bg-surface').trim() || '#1a1a2e',
-      catOptimization: style.getPropertyValue('--color-cat-optimization').trim() || '#10b981',
+      accent: style.getPropertyValue('--bp-accent').trim() || '#22d3ee',
+      muted: style.getPropertyValue('--bp-soft').trim() || '#48566f',
+      secondary: style.getPropertyValue('--bp-muted').trim() || '#7c89a3',
+      surface: style.getPropertyValue('--bp-surface').trim() || '#0d1320',
+      catOptimization: '#10b981',
     };
   }
 
