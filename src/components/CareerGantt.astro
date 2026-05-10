@@ -1,0 +1,67 @@
+---
+interface Role {
+  co: string;
+  role: string;
+  from: number;
+  to: number | 'Now';
+  color: string;
+}
+
+interface Props {
+  roles: Role[];
+  startYear?: number;
+  endYear?: number;
+}
+
+const { roles, startYear = 1998, endYear = 2026 } = Astro.props;
+const span = endYear - startYear; // number of year columns
+
+const years = Array.from({ length: span }, (_, i) => startYear + i);
+
+const resolved = roles.map((r) => {
+  const toYear = r.to === 'Now' ? endYear : r.to;
+  const startCol = r.from - startYear;
+  const endCol = toYear - startYear;
+  const left = (startCol / span) * 100;
+  const width = Math.max(((endCol - startCol) / span) * 100, 1);
+  return { ...r, toYear, left, width };
+});
+---
+
+<div class="bp-gantt">
+  <!-- Year scale -->
+  <div class="bp-gantt-scale">
+    <span class="bp-gantt-scale-label" aria-hidden="true"></span>
+    <div class="bp-mono bp-gantt-scale-row">
+      {years.map((y, i) => (
+        <span
+          class="bp-gantt-tick"
+          style={i % 4 === 0 ? '' : 'visibility: hidden;'}
+          data-current={y === endYear ? 'true' : undefined}
+        >
+          {y}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  {resolved.slice().reverse().map((r, i) => (
+    <div class="bp-gantt-row">
+      <div class="bp-gantt-label">
+        <div class="bp-gantt-co">{r.co}</div>
+        <div class="bp-mono bp-gantt-role">{r.role.toUpperCase()}</div>
+      </div>
+      <div class="bp-gantt-track" style={`--span: ${span};`}>
+        {years.map(() => <div class="bp-gantt-cell" aria-hidden="true"></div>)}
+        <div
+          class="bp-gantt-bar"
+          style={`left:${r.left}%; width:${r.width}%; background:${r.color}; border-color:${r.color}; animation-delay:${i * 90}ms;`}
+        >
+          <span class="bp-mono bp-gantt-bar-label">
+            {r.from}–{r.to}
+          </span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>

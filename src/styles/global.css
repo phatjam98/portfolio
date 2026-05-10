@@ -1553,3 +1553,270 @@ body::after {
   overflow-x: auto;
   max-width: 100%;
 }
+.bp-prose .accent { color: var(--bp-accent); }
+
+/* === About page =========================================================== */
+.bp-about-hero {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px 32px;
+}
+.bp-about-eyebrow {
+  font-size: 11px;
+  color: var(--bp-accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 18px;
+}
+.bp-about-headline {
+  font-size: clamp(40px, 7vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+  color: var(--bp-text);
+}
+.bp-about-headline .accent { color: var(--bp-accent); }
+.bp-about-intro {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+.bp-about-intro-text { max-width: none; }
+.bp-about-intro-text p:first-child {
+  font-size: 17px;
+  color: var(--bp-text);
+  line-height: 1.6;
+}
+.bp-about-spec {
+  padding: 24px;
+  border: 1px solid var(--bp-line);
+  background: var(--bp-panel);
+}
+.bp-about-spec-label {
+  font-size: 10px;
+  color: var(--bp-soft);
+  letter-spacing: 0.15em;
+  margin-bottom: 16px;
+}
+.bp-about-spec dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.bp-about-spec-row {
+  display: flex;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--bp-line);
+}
+.bp-about-spec-row:last-child { border-bottom: none; }
+.bp-about-spec dt {
+  font-size: 10px;
+  color: var(--bp-soft);
+  letter-spacing: 0.12em;
+  width: 90px;
+  flex-shrink: 0;
+}
+.bp-about-spec dd {
+  font-size: 12px;
+  color: var(--bp-text);
+  margin: 0;
+  word-break: break-word;
+}
+
+@media (min-width: 1024px) {
+  .bp-about-hero { padding: 56px 48px 32px; }
+  .bp-about-intro {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 56px;
+  }
+}
+
+/* === Career Gantt ========================================================= */
+.bp-gantt {
+  position: relative;
+  padding: 16px 0 24px;
+}
+.bp-gantt-scale {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  font-size: 9px;
+  color: var(--bp-soft);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+  padding-right: 12px;
+}
+.bp-gantt-scale-row {
+  display: grid;
+  grid-template-columns: repeat(var(--span, 28), 1fr);
+  border-bottom: 1px solid var(--bp-line);
+  padding-bottom: 4px;
+}
+.bp-gantt-tick {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  text-align: left;
+}
+.bp-gantt-tick[data-current="true"] { color: var(--bp-accent); }
+.bp-gantt-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--bp-line);
+}
+.bp-gantt-row:last-child { border-bottom: none; }
+.bp-gantt-label { padding-right: 12px; }
+.bp-gantt-co {
+  font-size: 13px;
+  color: var(--bp-text);
+  font-weight: 600;
+}
+.bp-gantt-role {
+  font-size: 9px;
+  color: var(--bp-soft);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+.bp-gantt-track {
+  position: relative;
+  height: 28px;
+  display: grid;
+}
+.bp-gantt-track {
+  grid-template-columns: repeat(var(--span, 28), 1fr);
+}
+.bp-gantt-cell {
+  border-right: 1px solid var(--bp-line);
+  opacity: 0.3;
+}
+.bp-gantt-bar {
+  position: absolute;
+  top: 6px;
+  height: 16px;
+  border: 1px solid;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  transform-origin: left center;
+  animation: bp-bar-grow 900ms cubic-bezier(.2, .7, .2, 1) backwards;
+}
+.bp-gantt-bar-label {
+  font-size: 9px;
+  color: var(--bp-bg);
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 767px) {
+  .bp-gantt { overflow-x: auto; }
+  .bp-gantt-scale,
+  .bp-gantt-row {
+    grid-template-columns: 100px 1fr;
+    min-width: 640px;
+  }
+  .bp-gantt-co { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-gantt-bar { animation: none; }
+}
+
+@media (min-width: 1024px) {
+  .bp-gantt-scale,
+  .bp-gantt-row { grid-template-columns: 180px 1fr; }
+}
+
+/* === Career narratives ==================================================== */
+.bp-career-narratives {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--bp-line);
+  border: 1px solid var(--bp-line);
+}
+.bp-career-narrative {
+  background: var(--bp-bg);
+  padding: 24px;
+}
+.bp-career-narrative h3 {
+  font-size: 20px;
+  color: var(--bp-text);
+  margin: 0 0 8px;
+}
+.bp-career-narrative-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 10px;
+  color: var(--bp-soft);
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+.bp-career-narrative p {
+  font-size: 14px;
+  color: var(--bp-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+  .bp-career-narratives { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* === Stack matrix ========================================================= */
+.bp-stack-matrix {
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 1px solid var(--bp-line);
+}
+.bp-stack-col {
+  padding: 20px;
+  border-bottom: 1px solid var(--bp-line);
+}
+.bp-stack-col:last-child { border-bottom: none; }
+.bp-stack-col-label {
+  font-size: 10px;
+  color: var(--bp-soft);
+  letter-spacing: 0.15em;
+  margin-bottom: 14px;
+}
+.bp-stack-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bp-stack-chip {
+  font-size: 12px;
+  color: var(--bp-text);
+  cursor: default;
+  transition: transform 180ms, color 180ms;
+}
+.bp-stack-chip:hover {
+  transform: translateX(3px);
+  color: var(--bp-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-stack-chip { transition: none; }
+}
+
+@media (min-width: 768px) {
+  .bp-stack-matrix { grid-template-columns: repeat(5, 1fr); }
+  .bp-stack-col {
+    border-bottom: none;
+    border-right: 1px solid var(--bp-line);
+  }
+  .bp-stack-col:last-child { border-right: none; }
+}
+
+/* === About prose grid ===================================================== */
+.bp-about-prose-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+}
+@media (min-width: 1024px) {
+  .bp-about-prose-grid { grid-template-columns: repeat(2, 1fr); gap: 64px; }
+}
