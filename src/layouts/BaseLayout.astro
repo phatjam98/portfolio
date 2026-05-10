@@ -22,7 +22,7 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" data-bp-theme="cyan">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -92,5 +92,15 @@ const imageURL = new URL(image, Astro.site ?? Astro.url.origin).href;
 
     <slot />
     <script src="../scripts/scroll-animations.ts"></script>
+
+    <!-- Blueprint web components (deferred, vanilla, zero deps) -->
+    <script src="/scripts/bp-theme.js" defer></script>
+    <script src="/scripts/bp-clock.js" defer></script>
+    <script src="/scripts/bp-count-up.js" defer></script>
+    <script src="/scripts/bp-crosshair.js" defer></script>
+    <script src="/scripts/bp-scroll-progress.js" defer></script>
+    <script src="/scripts/bp-glitch.js" defer></script>
+    <script src="/scripts/bp-reveal-trace.js" defer></script>
+    <script src="/scripts/bp-now-reading.js" defer></script>
   </body>
 </html>
