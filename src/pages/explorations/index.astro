@@ -1,55 +1,61 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import { getCollection } from 'astro:content';
+import { getCategory } from '../../data/categories';
 
 const explorations = (await getCollection('explorations'))
   .filter((entry) => entry.data.status === 'published')
   .sort((a, b) => a.data.order - b.data.order);
+
+const visionCat = getCategory('vision');
 ---
 
-<PageLayout title="Explorations | Travis Carter" description="Concepts, experiments, and forward-looking ideas in AI orchestration, streaming systems, and developer tooling.">
-  <section class="section-spacing px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="max-w-3xl mb-12">
-      <h1 class="mb-4">Explorations</h1>
-      <p data-animate="fade" class="text-lg text-[var(--color-text-secondary)]">
-        Ideas I'm actively thinking through. These are concepts and early-stage projects, not shipped work,
-        but directions I'm heading.
+<PageLayout
+  title="Explorations | Travis Carter"
+  description="Concepts, experiments, and forward-looking ideas in AI orchestration, streaming systems, and developer tooling."
+>
+  <section class="bp-section">
+    <header class="bp-writing-head">
+      <div class="bp-mono bp-section-tag">SHEET 05 — EXPLORATIONS</div>
+      <h1 class="bp-syne bp-writing-title">Explorations</h1>
+      <p class="bp-writing-lede">
+        Ideas I'm actively thinking through. Concepts and early-stage projects,
+        not shipped work, but directions I'm heading.
       </p>
-    </div>
+    </header>
 
-    {explorations.length > 0 ? (
-      <div class="grid grid-cols-1 gap-6">
-        {explorations.map((entry, i) => (
-          <a
-            href={`/explorations/${entry.id}`}
-            class="group block glass-panel rounded-xl p-6 card-hover"
-            data-animate="slide-up"
-            data-animate-delay={String(Math.min(i + 1, 4))}
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[color-mix(in_srgb,var(--color-cat-vision)_15%,transparent)] text-[var(--color-cat-vision)]">
-                Exploration
+    <div class="bp-cs-rows">
+      {explorations.length > 0 ? (
+        explorations.map((entry, i) => {
+          const n = String(i + 1).padStart(2, '0');
+          return (
+            <a href={`/explorations/${entry.id}`} class="bp-row bp-cs-row">
+              <div class="bp-mono bp-num bp-cs-row-n">{n}</div>
+              <span
+                class="bp-mono bp-cs-row-cat"
+                style={`color:${visionCat.color}; border-color:${visionCat.color};`}
+              >
+                EXPLORATION
               </span>
-            </div>
-            <h2 class="text-xl font-semibold text-[var(--color-text-primary)] mb-1 group-hover:text-[var(--color-accent)] transition-colors duration-200">
-              {entry.data.title}
-            </h2>
-            <p class="text-sm text-[var(--color-text-muted)] mb-3">{entry.data.subtitle}</p>
-            <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">{entry.data.description}</p>
-            <div class="flex flex-wrap gap-2">
-              {entry.data.tags.slice(0, 4).map((tag) => (
-                <span class="text-xs px-2 py-1 rounded-md bg-[var(--color-bg-surface)] text-[var(--color-text-muted)]">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </a>
-        ))}
-      </div>
-    ) : (
-      <p class="text-[var(--color-text-muted)] text-center py-12">
-        Explorations coming soon.
-      </p>
-    )}
+              <div class="bp-cs-row-title">
+                <h3 class="bp-syne">{entry.data.title}</h3>
+                <p>{entry.data.subtitle}</p>
+              </div>
+              <ul class="bp-cs-row-tags">
+                {entry.data.tags.slice(0, 4).map((t) => <li class="bp-mono">{t}</li>)}
+              </ul>
+              <div class="bp-cs-row-metric">
+                <div class="bp-mono bp-cs-row-metric-label">
+                  {(entry.data.category || 'IDEA').toUpperCase()}
+                </div>
+              </div>
+              <span class="bp-mono bp-cs-row-arrow" aria-hidden="true">→</span>
+            </a>
+          );
+        })
+      ) : (
+        <p class="bp-cs-empty bp-mono">EXPLORATIONS COMING SOON.</p>
+      )}
+    </div>
   </section>
 </PageLayout>
