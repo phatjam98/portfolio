@@ -5,7 +5,7 @@ import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const entries = await getCollection('explorations');
   return entries
-    .filter((entry) => entry.data.status === 'published')
+    .filter((entry) => entry.data.status === 'published' || import.meta.env.DEV)
     .map((entry) => ({
       params: { slug: entry.id },
       props: { entry },
