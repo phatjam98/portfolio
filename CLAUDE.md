@@ -46,7 +46,7 @@ Site has 12 pages. Writing articles are published.
 - Uses `glob()` from `astro/loaders` and `z` from `astro/zod`
 - Render with `import { render } from 'astro:content'` then `const { Content } = await render(entry)`
 - Dynamic routes: `getStaticPaths()` returns `{ params: { slug: entry.id }, props: { entry } }`
-- Writing articles use `status: "draft" | "published"` — only `published` entries appear in listings
+- All collections use `status: "draft" | "published"` — only `published` entries appear in production; listing/detail pages and the homepage also show drafts in `npm run dev` via `|| import.meta.env.DEV` in the status filter
 
 ### Navigation Data
 - Nav and footer links are defined in `src/data/navigation.ts` (NOT duplicated in each component)
@@ -55,6 +55,7 @@ Site has 12 pages. Writing articles are published.
 ### Content Conventions
 - No em dashes anywhere — use colons, commas, parentheses, or restructure the sentence
 - ECFX is anonymized as "law-tech startup" in all case study content
+- No ECFX IP in content: never name courts or e-filing vendors, internal environment names (use "the dev environment"), internal project codenames, or config-file paths that reveal them; keep metrics approximate and stage/processor names functional rather than mirroring internal code
 - Contact email: `phatjam98@gmail.com`
 
 ### Theme System
@@ -104,9 +105,9 @@ src/
   components/         # Astro components (Nav, Footer, ThemeToggle, cards, etc.)
     charts/           # D3.js chart components (BuildTimeChart)
   content/            # MDX content collections
-    case-studies/     # 4 case study MDX files (real content, ECFX anonymized)
+    case-studies/     # 9 case study MDX files (3 published + 6 pipeline-platform drafts, ECFX anonymized)
     explorations/     # Short-form exploration posts
-    writing/          # 2 writing article MDX files (both draft)
+    writing/          # 6 writing article MDX files (2 published + 4 pipeline-platform drafts)
   data/               # Shared data (navigation.ts)
   layouts/            # BaseLayout, PageLayout, CaseStudyLayout, ArticleLayout, ExplorationLayout
   pages/              # File-based routing (index, about, 404, case-studies/*, explorations/*, writing/*)

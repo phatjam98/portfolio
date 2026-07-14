@@ -1,0 +1,50 @@
+---
+title: "Pipeline Orchestrator: One DAG to Replace 534 Processors"
+subtitle: "A config-driven DAG engine for court-document processing with terminal evaluation and publish-before-commit safety"
+description: "How a single Micronaut orchestrator replaced 534 concrete processor classes at a law-tech startup, and the subtle invariants (terminal state detection, optimistic-lock retry, transaction boundaries) that made it safe in production."
+heroMetric: "534 → 1"
+heroMetricLabel: "Concrete Processors Collapsed into One DAG Engine"
+tags: ["Micronaut", "Postgres", "RabbitMQ", "DAG", "Java", "Architecture"]
+publishDate: 2026-05-13
+order: 2
+status: "draft"
+category: "architecture"
+role: "Software Architect"
+company: "law-tech startup"
+---
+
+## The Problem
+
+The legacy document-processing system at a law-tech startup had grown to 534 concrete Java processor classes, one per court jurisdiction. Each new court onboarding meant new code, a new deployment, and a fresh round of regression testing. The fan-out had also become unmaintainable: a small change to a shared step required touching hundreds of files, and the cumulative branching logic obscured what every processor actually did.
+
+I wanted a single engine that read its behavior from configuration instead of code. Courts would be onboarded by adding rows to a database table, not by writing and shipping Java.
+
+## The Approach
+
+I designed Pipeline Orchestrator as a config-driven DAG engine on Micronaut and Postgres. It started on Micronaut 4 and today runs Micronaut 5 on Java 25, migrated mid-build without pausing feature work. Each court maps onto one of three reusable DAG patterns (email-based intake, cookie-session authentication, and full browser automation), stored as versioned template rows: the earliest were Flyway-seeded, and today they are managed through a JSON-schema-validated write API. At runtime the orchestrator instantiates a processing context, dispatches the eligible steps to RabbitMQ for sub-processors to execute, then merges their results back into a JSONB column on the context as completion messages arrive.
+
+```mermaid
+graph TB
+    A[Intake] --> B[Orchestrator]
+    B --> C{Read DAG Template}
+    C --> D[Dispatch Eligible Steps]
+    D --> E[RabbitMQ]
+    E --> F[Generic Sub-Processors]
+    F --> G[Completion Message]
+    G --> B
+    B --> H{Terminal?}
+    H -->|No| D
+    H -->|Yes| I[Final Status]
+    style B fill:#06b6d4,color:#fff
+    style H fill:#06b6d4,color:#fff
+```
+
+Three invariants kept the engine honest. First, **terminal evaluation** is not just a check for "no more steps." Some DAGs halt early (duplicate detected, case sealed), so the orchestrator evaluates terminal state both before and after dispatch, and a step's halt signal must short-circuit the dispatch loop, not race it. Second, **optimistic-lock retry**: when two sub-processors complete at almost the same instant, both want to merge into the same JSONB document. A `@Version` field on the context plus a bounded retry loop with a fresh transactional read handles the collision without losing work. Third, **publish before commit is forbidden**: the RabbitMQ dispatch lives outside the `@Transactional` boundary, so a rollback never leaks a phantom message into the queue.
+
+Two more safeguards round out the engine. Every dispatch attempt is deduplicated by a unique constraint on (context, step, attempt), so a redelivered message can never double-execute a step. And failed steps back off through a tiered ladder of RabbitMQ delay queues (seconds at first, hours at the top) instead of hot-looping against a court system that is already struggling.
+
+The DAG vocabulary is intentionally small. A step has a list of dependencies, an optional fallback step, and a terminal flag. There are no per-court hooks, no scripting language inside the config. Anything court-specific lives in the sub-processor, not the orchestrator.
+
+## Results
+
+A single deployable service now drives every court the platform supports, including patterns that previously required bespoke processors. Onboarding a new court is configuration through a versioned write API, not a code change or a deploy. Phase 1 of the rollout passed a formal architectural review on the third attempt: the first two iterations missed the half-logic in terminal evaluation and the publish-before-commit invariant. Those bugs would have produced phantom in-flight steps and rollback-silenced messages in production, and the gate caught them before any traffic flowed.

@@ -3,7 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 import CareerGantt from '../components/CareerGantt.astro';
 
 const careerRoles = [
-  { co: 'ECFX', role: 'Sr. Software Engineer', from: 2023, to: 'Now' as const, color: '#22d3ee' },
+  { co: 'ECFX', role: 'Software Architect', from: 2023, to: 'Now' as const, color: '#22d3ee' },
   { co: 'PHC', role: 'Director, Platform Engineering', from: 2021, to: 2024, color: '#06b6d4' },
   { co: 'Globality', role: 'Sr. Software Engineer', from: 2020, to: 2021, color: '#8b5cf6' },
   { co: 'Banjo', role: 'Sr. Software Engineer', from: 2014, to: 2020, color: '#f59e0b' },
@@ -22,8 +22,8 @@ const specSheet: Array<[string, string]> = [
 
 const stackMatrix: Array<[string, string[]]> = [
   ['Languages', ['Java', 'Kotlin', 'TypeScript', 'Python']],
-  ['Streaming', ['Apache Flink', 'Apache Kafka', 'Protobuf', 'Elasticsearch']],
-  ['Frameworks', ['Micronaut', 'Spring Boot', 'Astro', 'React']],
+  ['Streaming & Messaging', ['Apache Flink', 'Apache Kafka', 'RabbitMQ', 'gRPC', 'Protobuf', 'Elasticsearch']],
+  ['Frameworks', ['Micronaut', 'Spring Boot', 'Vue', 'Astro', 'React']],
   ['Infra', ['AWS', 'EKS', 'Terraform', 'Docker']],
   ['Practices', ['DDD', 'Event Sourcing', 'TDD', 'Context Engineering']],
 ];
@@ -38,9 +38,9 @@ interface CareerNarrative {
 const careerNarratives: CareerNarrative[] = [
   {
     co: 'ECFX',
-    role: 'Sr. Software Engineer',
+    role: 'Software Architect',
     dates: 'Oct 2023 — Present',
-    body: 'Full-stack engineer and platform architect at a law-tech startup. Sole owner of DevOps and infrastructure. Refactored CI/CD pipelines to cut build times from 45 minutes to under 10 with selective build and deploy. Led a Micronaut 4 and Hibernate 6 upgrade across a six-year-old codebase with no existing test coverage, using Claude Code workflows and a TDD-first approach that closed over 50 Jira tickets in two weeks. Presented AI-augmented development methodology to engineering leadership, and have been writing publicly about context engineering and agent-driven development.',
+    body: 'Software Architect at a law-tech startup; sole owner of DevOps and infrastructure. Architected and led the build of a config-driven, DAG-based document-processing platform: four Micronaut services over RabbitMQ that replace 534 court-specific processor classes with ten generic pipeline stages, so onboarding a court is validated configuration instead of code, plus a standalone JWT auth service and a Vue operator dashboard. Refactored CI/CD pipelines to cut build times from 45 minutes to under 10 with selective build and deploy. Led a Micronaut 4 and Hibernate 6 upgrade across a six-year-old codebase with no existing test coverage, using Claude Code workflows and a TDD-first approach that closed over 50 Jira tickets in two weeks, then moved the new platform onto Micronaut 5 and Java 25. Presented AI-augmented development methodology to engineering leadership, and have been writing publicly about context engineering and agent-driven development.',
   },
   {
     co: 'PHC',

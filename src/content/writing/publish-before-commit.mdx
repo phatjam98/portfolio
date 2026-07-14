@@ -1,0 +1,51 @@
+---
+title: "Publish Before Commit: Keeping RabbitMQ Out of Your Transactions"
+description: "Why message publishes belong outside the @Transactional boundary, and the rollback-silenced-message bug pattern that motivates the rule."
+tags: ["Micronaut", "RabbitMQ", "Transactions", "Java", "Distributed Systems"]
+publishDate: 2026-05-13
+status: "draft"
+category: "architecture"
+---
+
+## The Problem
+
+Inside a single `@Transactional` method, it is genuinely tempting to write to the database and then publish a RabbitMQ message describing what you just wrote. The code reads beautifully: one method, one unit of work, two side effects, atomic intent. The bug pattern this hides is the opposite of what you would guess.
+
+The naive failure mode is "what if the publish succeeds and the database rolls back, leaving a phantom message about state that never existed?" That one is widely discussed and broadly defended against. The mode that actually bites you in production is quieter: **the publish silently does not happen at all**, because it was scoped inside a transaction that rolled back, and your messaging client cheerfully participated in the rollback. You get no exception. You get no log line. You get a step that completed on disk and never told anyone about it, and a downstream consumer that is now sitting on its hands.
+
+I hit this exact bug while building a config-driven [pipeline orchestrator](/case-studies/pipeline-orchestrator) for a law-tech startup. A step would complete, the orchestrator would merge its result into a JSONB column under a `@Transactional` boundary, and then publish a dispatch message for the next eligible step in the DAG. Under contention, when two completions arrived at almost the same time, one of them would trip an `OptimisticLockException` and roll back. The exception was caught, retried, and eventually the merge succeeded. But on the retry path, the original publish was already gone. Quiet pipeline stall. No errors anywhere.
+
+## The Approach
+
+The rule that fell out of that incident: **never publish a RabbitMQ message inside a `@Transactional` method.** Treat the message as something you only earn the right to publish after the database has committed.
+
+In practice, the cleanest shape I've found is to return an intent object from the transactional method and publish it in the caller, which is not transactional:
+
+```java
+public class StepExecutionCoordinator {
+
+  @Transactional
+  public EvaluationResult onStepCompleted(StepCompletion completion) {
+    var context = contextRepo.findById(completion.contextId()).orElseThrow();
+    context.merge(completion);
+    return dagEvaluator.evaluate(context);
+  }
+
+  public void handleStepCompletion(StepCompletion completion) {
+    EvaluationResult result = onStepCompleted(completion);
+    for (DispatchIntent intent : result.dispatchIntents()) {
+      publisher.dispatch(intent);
+    }
+  }
+}
+```
+
+The `@Transactional` method does database work and returns. Only when control returns to the non-transactional caller, after the transaction has committed, does any RabbitMQ traffic happen. If the transaction rolls back, the `EvaluationResult` never materializes and there is nothing to publish.
+
+This pattern also makes the retry behavior obvious. If the transactional method throws `OptimisticLockException`, the caller catches it, refreshes the context, and tries again. The publish only happens after a successful commit, so a retry can never produce a duplicate message for a failed attempt.
+
+## Results
+
+The rule sounds pedantic in code review and is invisible in normal testing. It only surfaces under contention, which is exactly when you cannot afford to debug a quiet stall. Two architectural review gates caught the publish-inside-transaction pattern in our codebase before it shipped, and the refactor to return-and-publish-outside was the smallest change I have ever made for the largest reliability win.
+
+Two adjacent rules earn their keep alongside this one. **Publish should be idempotent**: include a deduplication key in every message so consumers can drop replays. **Publish failures should be observable**: log and meter every send, and use broker-level publisher confirms, because a publish that does not throw is not the same as a publish that arrived.

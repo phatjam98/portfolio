@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { nowReading } from '../../data/now-reading';
 
 const articles = (await getCollection('writing'))
-  .filter((entry) => entry.data.status === 'published')
+  .filter((entry) => entry.data.status === 'published' || import.meta.env.DEV)
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
 const fmtDate = (d: Date) =>

@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { getCategory } from '../../data/categories';
 
 const explorations = (await getCollection('explorations'))
-  .filter((entry) => entry.data.status === 'published')
+  .filter((entry) => entry.data.status === 'published' || import.meta.env.DEV)
   .sort((a, b) => a.data.order - b.data.order);
 
 const visionCat = getCategory('vision');
