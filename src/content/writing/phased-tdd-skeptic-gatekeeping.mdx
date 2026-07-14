@@ -33,7 +33,7 @@ graph LR
     style G3 fill:#06b6d4,color:#fff
 ```
 
-The four phases on this project were Foundations (entities, Flyway, fixtures), Orchestrator (DAG engine, dispatch, retry, terminal evaluation), Sub-Processors (the SP-A through SP-F implementations plus the first end-to-end traffic run), and Auth + Patterns (credential authentication plus the harder DAG patterns). Each phase has its own merge request, its own test suite, and its own Skeptic verdict before anyone touches the next one.
+The four phases on this project were Foundations (entities, Flyway, fixtures), Orchestrator (DAG engine, dispatch, retry, terminal evaluation), Sub-Processors (the first six pipeline stages plus the first end-to-end traffic run), and Auth + Patterns (credential authentication plus the harder DAG patterns). Each phase has its own merge request, its own test suite, and its own Skeptic verdict before anyone touches the next one.
 
 The gate caught three blockers that the test suites would not have caught on their own.
 
@@ -47,7 +47,7 @@ In addition to the blockers, each phase produced a handful of warnings and recom
 
 ## Results
 
-Four phases, roughly 580 tests, three architectural blockers caught and resolved before any of them reached production. The pattern that emerged was that the Skeptic role finds a different *class* of bug than the TDD suite by design. The suite asks "does this code do what its tests say it does?" The Skeptic asks "is this the right code at all?" Both are necessary; neither is sufficient.
+Four phases, roughly 580 tests at the final gate (a suite since grown past 1,100), three architectural blockers caught and resolved before any of them could ship. The pattern that emerged was that the Skeptic role finds a different *class* of bug than the TDD suite by design. The suite asks "does this code do what its tests say it does?" The Skeptic asks "is this the right code at all?" Both are necessary; neither is sufficient.
 
 The gate is cheaper than it looks. The Phase 0 blocker took twenty minutes to fix once it was named. The Phase 1 blocker took an afternoon. The Phase 2 blocker reshaped Phase 3's scope but did not delay the phase itself. The alternative was an outage somewhere downstream, with a five-figure incident cost minimum. The math favors the gate every single time.
 

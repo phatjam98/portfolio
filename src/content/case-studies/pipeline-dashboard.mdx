@@ -1,9 +1,9 @@
 ---
-title: "Pipeline Dashboard: A Read-Only SPA and the API-Perimeter Lesson"
-subtitle: "A Vue 3 observability surface that intentionally owns nothing it can't see"
-description: "Building a read-only operator dashboard for a config-driven pipeline platform, the refresh-on-401 client middleware that keeps sessions clean, and the architectural lesson hiding in 'just add an nginx location block'."
+title: "Pipeline Dashboard: A Thin SPA and the API-Perimeter Lesson"
+subtitle: "A Vue 3 operator surface that grew from read-only observability to config editing without ever owning a mutation"
+description: "Building an operator dashboard for a config-driven pipeline platform (read-only at launch, then a deliberate write surface for court config and patch-and-replay), plus the refresh-on-401 client middleware and the architectural lesson hiding in 'just add an nginx location block'."
 heroMetric: "0"
-heroMetricLabel: "Write Endpoints on the Dashboard"
+heroMetricLabel: "Deploys Needed to Onboard a Court"
 tags: ["Vue", "TypeScript", "SPA", "Kubernetes", "Architecture"]
 publishDate: 2026-05-13
 order: 4
@@ -17,11 +17,11 @@ company: "law-tech startup"
 
 Once the [pipeline orchestrator](/case-studies/pipeline-orchestrator) and [workers](/case-studies/pipeline-workers) were running, operators needed somewhere to look. The legacy system surfaced its state through log lines and the occasional database query, which had aged badly. We wanted a real observability surface: live processing contexts, the DAG steps each was at, recent failures, and an audit trail of who touched what.
 
-The temptation was to give that surface write power too. "While we are building a dashboard, let us also let it edit court configs and trigger replays." The temptation is wrong. A dashboard with write power is a third place that has to be authorized, audited, validated, and tested for every mutation the platform supports. A dashboard without write power is a screen.
+The temptation was to give that surface write power of its own. "While we are building a dashboard, let us also let it edit court configs and trigger replays." Operators did eventually get both of those features, but the temptation, as stated, is wrong. A dashboard that *owns* mutations is a third place that has to be authorized, audited, validated, and tested for every write the platform supports. A dashboard that merely renders the owning service's API is a screen. The distinction decided the architecture.
 
 ## The Approach
 
-The dashboard is a Vue 3 SPA. It reads from the orchestrator's REST API, renders processing contexts and DAG state, and that is the entire contract. Every mutation that an operator might want, from triggering a replay to editing a court configuration, lives in the orchestrator's own controllers, which the dashboard happens to call but does not own.
+The dashboard is a Vue 3 SPA. It launched read-only: processing contexts, live DAG state rendered as an SVG graph, step timelines, failure drill-downs. The write features came later and deliberately: versioned court-config and jurisdiction-rule editors (an embedded Monaco editor over JSON-schema-validated config), and a patch-and-replay action on failed steps. Every one of those mutations lives in the orchestrator's own controllers, gated by JWTs from the auth service; the dashboard calls them but does not own them. The SPA's contract never changed: it owns no endpoints and no data.
 
 ```mermaid
 graph LR
@@ -45,4 +45,4 @@ The dashboard's nginx serves the SPA. That is its job. **A REST API is meant to 
 
 ## Results
 
-The dashboard ships with zero write endpoints. Every mutation operators want is owned by the service that owns the data, authorized by JWTs the auth API issues, and audited by the orchestrator's own audit columns. Adding the operator login flow took roughly a day of Vue work; closing the wrong nginx merge request took five minutes and saved us an architectural mistake we would have spent six months unwinding.
+The dashboard still ships with zero endpoints of its own, even after growing a real write surface. Every mutation operators use (editing a court's config, adjusting a jurisdiction rule, patching and replaying a failed run) is owned by the service that owns the data, authorized by JWTs the auth API issues, and audited by the orchestrator's own audit columns. The payoff of the config editors is the platform's headline property made tangible: onboarding a court is an operator editing validated configuration in a browser, with zero deploys. Adding the operator login flow took roughly a day of Vue work; closing the wrong nginx merge request took five minutes and saved us an architectural mistake we would have spent six months unwinding.

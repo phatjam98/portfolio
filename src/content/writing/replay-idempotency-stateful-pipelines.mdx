@@ -39,6 +39,8 @@ graph LR
     style D fill:#06b6d4,color:#fff
 ```
 
+A third, structural idea backs both rules: **a replay is not a mutation of the original run.** In the platform's replay design, a replay forks a fresh processing context linked back to its parent; the source context stays immutable, and every artifact the replay produces lands in a ledger with a supersede link to whatever it replaced. Lineage stays queryable, nothing is overwritten in place, and "which version of this document is live" is a ledger question rather than an archaeology project.
+
 The second rule has a quiet caveat that is worth writing down. The non-deduplicating path is only safe if **every** writer on the replay branch uses it. The moment a new feature adds a different `store()` call to the replay flow, the legacy dedup short-circuits the write to the bare key of the original (corrupted) row, and the replay silently no-ops. The fix is not a band-aid at the storage layer; the fix is either a non-null file identifier on every replay-minted document, or a content-hash-based dedup key that actually reflects what is being stored.
 
 ## Results

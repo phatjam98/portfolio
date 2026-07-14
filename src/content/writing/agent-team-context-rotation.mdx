@@ -33,7 +33,7 @@ graph TB
     style C fill:#06b6d4,color:#fff
 ```
 
-The **Architect** owned the orchestrator and the DAG engine. **SubProc** owned the nine sub-processors. **TestEngineer** owned fixtures, the test driver, and the end-to-end suite. **Infra** owned Kubernetes manifests, CI, and the deployment story. **Dashboard** owned the Vue 3 SPA when its phase came up. **Skeptic** was the gate keeper, with a different agent type from everyone else, whose only job was to read the code and disagree with it.
+The **Architect** owned the orchestrator and the DAG engine. **SubProc** owned the generic pipeline stages. **TestEngineer** owned fixtures, the test driver, and the end-to-end suite. **Infra** owned Kubernetes manifests, CI, and the deployment story. **Dashboard** owned the Vue 3 SPA when its phase came up. **Skeptic** was the gate keeper, with a different agent type from everyone else, whose only job was to read the code and disagree with it.
 
 Three rules made the team work.
 
@@ -43,10 +43,10 @@ Three rules made the team work.
 
 **Teammates can spawn anonymous subagents but cannot spawn teammates.** This kept the roster flat and the resource use predictable. An Architect needing a quick code search can launch an unnamed Explore agent; an Architect needing a second pair of eyes on a design has to ask the Skeptic, not invent a new permanent role.
 
-Two operational details made the rules sustainable. The **Skeptic gate** runs at every phase boundary with a categorized verdict (blockers, warnings, recommendations), so no teammate can ship past the phase without an outsider reading their code. And the team's configuration lives in a JSON file (`~/.claude/teams/receipt-pipeline-poc/config.json`) with `isActive` flags per teammate, so idle agents can be shut down between phases and verified-shut-down before the next phase opens.
+Two operational details made the rules sustainable. The **Skeptic gate** runs at every phase boundary with a categorized verdict (blockers, warnings, recommendations), so no teammate can ship past the phase without an outsider reading their code. And the team's configuration lives in a JSON file (`~/.claude/teams/<project>/config.json`) with `isActive` flags per teammate, so idle agents can be shut down between phases and verified-shut-down before the next phase opens.
 
 ## Results
 
-Four phases, six standing roles, three Architect rotations, four Skeptic rotations, and zero branch collisions across the whole build. The platform shipped with roughly 580 tests and three architectural defects caught at the Skeptic gates (covered in detail in the [companion piece on phased TDD](/writing/phased-tdd-skeptic-gatekeeping)). The total agent-hours were a fraction of what a single long-running agent would have consumed, because the rotation rule cut off the long tail where context quality degrades faster than the work progresses.
+Four phases, six standing roles, three Architect rotations, four Skeptic rotations, and zero branch collisions across the whole build. The platform hit its final gate with roughly 580 tests (a suite since grown past 1,100) and three architectural defects caught at the Skeptic gates (covered in detail in the [companion piece on phased TDD](/writing/phased-tdd-skeptic-gatekeeping)). The total agent-hours were a fraction of what a single long-running agent would have consumed, because the rotation rule cut off the long tail where context quality degrades faster than the work progresses.
 
 Two patterns from the team experience generalize beyond this project. **Specialization beats generality for sustained work.** A teammate with a narrow scope and an explicit agent type produces better code than a generalist trying to context-switch between layers. **Rotation is a quality control, not a resource control.** The 25% threshold is not about saving tokens; it is about replacing the teammate before their judgment quietly gets worse. Treat the rotation as a hand-off discipline, not a budget discipline, and the rest follows.

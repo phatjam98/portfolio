@@ -48,4 +48,4 @@ This pattern also makes the retry behavior obvious. If the transactional method 
 
 The rule sounds pedantic in code review and is invisible in normal testing. It only surfaces under contention, which is exactly when you cannot afford to debug a quiet stall. Two architectural review gates caught the publish-inside-transaction pattern in our codebase before it shipped, and the refactor to return-and-publish-outside was the smallest change I have ever made for the largest reliability win.
 
-Two adjacent rules earn their keep alongside this one. **Publish should be idempotent**: include a deduplication key in every message so consumers can drop replays. **Publish failures should be observable**: log and meter every send, because a publish that does not throw is not the same as a publish that arrived.
+Two adjacent rules earn their keep alongside this one. **Publish should be idempotent**: include a deduplication key in every message so consumers can drop replays. **Publish failures should be observable**: log and meter every send, and use broker-level publisher confirms, because a publish that does not throw is not the same as a publish that arrived.
